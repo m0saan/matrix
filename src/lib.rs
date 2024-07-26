@@ -1,8 +1,27 @@
-use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
+use std::{
+    fmt::Display,
+    ops::{Add, Div, Index, IndexMut, Mul, Sub},
+};
 
 #[derive(Debug, Clone, Default, PartialEq, PartialOrd)]
 pub struct Vector<T> {
     pub data: Vec<T>,
+}
+
+impl<T> Display for Vector<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "//-> [")?;
+        for (i, val) in self.data.iter().enumerate() {
+            if i > 0 {
+                write!(f, ", ")?;
+            }
+            write!(f, "{:.1}", val)?;
+        }
+        write!(f, "]\n")
+    }
 }
 
 impl<T> Vector<T>
@@ -33,6 +52,18 @@ where
     pub fn add(&mut self, rhs: &Self) {
         for (lsh_e, rhs_e) in self.data.iter_mut().zip(rhs.data.iter()) {
             *lsh_e = *lsh_e + *rhs_e;
+        }
+    }
+
+    pub fn sub(&mut self, rhs: &Self) {
+        for (lsh_e, rhs_e) in self.data.iter_mut().zip(rhs.data.iter()) {
+            *lsh_e = *lsh_e - *rhs_e;
+        }
+    }
+
+    pub fn scl(&mut self, scalar: T) {
+        for elem in self.data.iter_mut() {
+            *elem = *elem * scalar;
         }
     }
 }
