@@ -1,6 +1,6 @@
 use std::{
     fmt::Display,
-    ops::{Add, Div, Index, IndexMut, Mul, Sub},
+    ops::{Add, Div, Mul, Sub},
 };
 
 #[derive(Debug, Clone, Default, PartialEq, PartialOrd)]
@@ -67,3 +67,49 @@ where
         }
     }
 }
+
+// O(n)
+pub fn linear_combination<T>(vectors: &mut [Vector<T>], scalars: &[T]) -> Vector<T>
+where
+    T: Add<Output = T>
+        + Sub<Output = T>
+        + Mul<Output = T>
+        + Div<Output = T>
+        + Copy
+        + Clone
+        + Default
+        + PartialOrd,
+{
+    assert_eq!(
+        vectors.len(),
+        scalars.len(),
+        "The number of vectors and scalars must be the same"
+    );
+
+    if vectors.is_empty() {
+        panic!("The number of vectors must be greater than 0");
+    }
+
+    let mut result = Vector::from(&vec![T::default(); vectors[0].size()]);
+    for (vector, scalar) in vectors.iter_mut().zip(scalars.iter()) {
+        vector.scl(scalar.clone());
+        result.add(&vector);
+    }
+    result
+}
+
+// pub fn lerp<V>(u: V, v: V, t: f32) -> V
+// where
+//     V: Clone
+//         + std::ops::AddAssign<V>
+//         + std::ops::SubAssign<V>
+//         + std::ops::MulAssign<f32>
+//         + std::ops::Add<V, Output = V>
+//         + std::ops::Sub<V, Output = V>
+//         + std::ops::Mul<f32, Output = V>,
+// {
+//     let mut result = u;
+//     result *= 1.0 - t;
+//     result += v * t;
+//     result
+// }
