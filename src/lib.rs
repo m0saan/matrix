@@ -122,31 +122,32 @@ where
     }
 }
 
-use num::Signed; // 0.2.0
-
-impl<T> Vector<T>
-where
-    T: Add<Output = T>
-        + Sub<Output = T>
-        + Mul<Output = T>
-        + Div<Output = T>
-        + Copy
-        + Clone
-        + Default
-        + PartialOrd
-        + Signed,
-{
+impl Vector<f32> {
     pub fn norm_1(&mut self) -> f32 {
-        let norm = T::default();
-        for e in self.data {
-            norm = norm + e.absolute();
+        let mut norm = 0.0;
+        for e in self.data.iter() {
+            norm = norm + e.abs();
         }
         norm
     }
 
-    pub fn norm(&mut self) -> f32 {}
+    pub fn norm(&mut self) -> f32 {
+        let mut norm = 0.0;
+        for e in self.data.iter() {
+            norm = norm + (*e * *e);
+        }
+        norm.sqrt()
+    }
 
-    pub fn norm_inf(&mut self) -> f32 {}
+    pub fn norm_inf(&mut self) -> f32 {
+        let mut norm = 0.0;
+        for e in self.data.iter() {
+            if e.abs() > norm {
+                norm = e.abs();
+            }
+        }
+        norm
+    }
 }
 
 //
