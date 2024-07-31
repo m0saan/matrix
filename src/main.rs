@@ -1,4 +1,4 @@
-use matrix::{linear_combination, Matrix, Vector};
+use matrix::{cross_product, Vector};
 
 fn main() {
     // let mut u = Vector::from([2., 3.]);
@@ -91,13 +91,53 @@ fn main() {
     // println!("{}", linear_combination(&mut [v1, v2], &[10., -2.]));
     // // [10.][0.][230.]
 
-    let mut u = Vector::from([0., 0., 0.]);
-    println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
-    // 0.0, 0.0, 0.0
-    let mut u = Vector::from([1., 2., 3.]);
-    println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
-    // 6.0, 3.74165738, 3.0
-    let mut u = Vector::from([-1., -2.]);
-    println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
-    // 3.0, 2.236067977, 2.0
+    // let  u = Vector::from([0., 0., 0.]);
+    // println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
+    // // 0.0, 0.0, 0.0
+    // let  u = Vector::from([1., 2., 3.]);
+    // println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
+    // // 6.0, 3.74165738, 3.0
+    // let  u = Vector::from([-1., -2.]);
+    // println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
+    // // 3.0, 2.236067977, 2.0
+
+    // let u = Vector::from([1., 0.]);
+    // let v = Vector::from([1., 0.]);
+    // println!("{}", angle_cos(&u, &v));
+    // // 1.0
+    // let u = Vector::from([1., 0.]);
+    // let v = Vector::from([0., 1.]);
+    // println!("{}", angle_cos(&u, &v));
+    // // 0.0
+    // let u = Vector::from([-1., 1.]);
+    // let v = Vector::from([ 1., -1.]);
+    // println!("{}", angle_cos(&u, &v));
+    // // -1.0
+    // let u = Vector::from([2., 1.]);
+    // let v = Vector::from([4., 2.]);
+    // println!("{}", angle_cos(&u, &v));
+    // // 1.0
+    // let u = Vector::from([1., 2., 3.]);
+    // let v = Vector::from([4., 5., 6.]);
+    // println!("{}", angle_cos(&u, &v));
+    // // 0.974631846
+
+    let u = Vector::from([0., 0., 1.]);
+    let v = Vector::from([1., 0., 0.]);
+    println!("{}", cross_product(&u, &v));
+    // [0.]
+    // [1.]
+    // [0.]
+    let u = Vector::from([1., 2., 3.]);
+    let v = Vector::from([4., 5., 6.]);
+    println!("{}", cross_product(&u, &v));
+    // [-3.]
+    // [6.]
+    // [-3.]
+    let u = Vector::from([4., 2., -3.]);
+    let v = Vector::from([-2., -5., 16.]);
+    println!("{}", cross_product(&u, &v));
+    // [17.]
+    // [-58.]
+    // [-16.]
 }

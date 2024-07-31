@@ -140,6 +140,20 @@ where
 #[derive(Debug, Clone, Copy)]
 pub struct Vector<T, const N: usize>([T; N]);
 
+impl<T, const N: usize> IndexMut<usize> for Vector<T,N> {
+    fn index_mut(&mut self, index: usize) -> &mut T {
+        &mut self.0[index]
+    }
+}
+
+impl<T, const N: usize> Index<usize> for Vector<T,N> {
+    type Output = T;
+
+    fn index(&self, index:usize) -> &Self::Output {
+        &self.0.index(index)
+    }
+}
+
 
 impl<T, const N: usize> Deref for Vector<T, N> {
     type Target = [T; N];
@@ -157,7 +171,7 @@ impl<T, const N: usize> DerefMut for Vector<T, N> {
 
 impl<T, const N: usize> Vector<T, N>
 where
-    T:  Copy + Default
+    T: Copy + Default,
 {
     pub fn from(data: [T; N]) -> Self {
         Self(data)
@@ -197,7 +211,7 @@ where
 
 impl<T, const N: usize> Vector<T, N>
 where
-    T: Num + Sum + Copy + Clone ,
+    T: Num + Sum + Copy + Clone,
 {
     pub fn dot(&self, v: Self) -> T {
         self.0.iter().zip(v.0.iter()).map(|(a, b)| *a * *b).sum()
@@ -251,7 +265,6 @@ where
         *self = *self + rhs;
     }
 }
-
 
 // Implement the Mul trait for Vector<T, N> with f32
 impl<T, const N: usize> Mul<f32> for Vector<T, N>
@@ -317,13 +330,18 @@ where
     }
 }
 
+/* ***************************** */
+/*      Linear Combination      */
+/* *************************** */
 // O(n)
+
 pub fn linear_combination<T, const N: usize>(
     vectors: &mut [Vector<T, N>],
     scalars: &[T],
 ) -> Vector<T, N>
 where
-    T: Add<Output = T> + Mul<Output = T>  + Copy + Clone + Default + PartialOrd, Vector<T, N>: Mul<T>
+    T: Add<Output = T> + Mul<Output = T> + Copy + Clone + Default + PartialOrd,
+    Vector<T, N>: Mul<T>,
 {
     assert_eq!(
         vectors.len(),
@@ -344,17 +362,126 @@ where
     result
 }
 
+/* *************** */
+/*      Norms      */
+/* *************** */
 impl<T, const N: usize> Vector<T, N>
 where
     T: Float + Sum,
 {
-    pub fn norm_1(&mut self) -> T {
+    /// Calculates the L1 norm (Manhattan norm) of the vector.
+    ///
+    /// The L1 norm is the sum of the absolute values of the vector's components.
+    ///
+    /// # Returns
+    /// The L1 norm as a value of type `T`.
+    pub fn norm_1(&self) -> T {
         self.0.iter().map(|x| x.abs()).sum()
     }
-    pub fn norm(&mut self) -> T {
+
+    /// Calculates the L2 norm (Euclidean norm) of the vector.
+    ///
+    /// The L2 norm is the square root of the sum of the squared components.
+    ///
+    /// # Returns
+    /// The L2 norm as a value of type `T`.
+    pub fn norm(&self) -> T {
         self.0.iter().map(|x| x.powi(2)).sum::<T>().sqrt()
     }
-    pub fn norm_inf(&mut self) -> T {
-        self.0.iter().map(|x| x.abs()).fold(T::zero(), |a, b| a.max(b))
+
+    /// Calculates the L-infinity norm (maximum norm) of the vector.
+    ///
+    /// The L-infinity norm is the maximum of the absolute values of the vector's components.
+    ///
+    /// # Returns
+    /// The L-infinity norm as a value of type `T`.
+    pub fn norm_inf(&self) -> T {
+        self.0
+            .iter()
+            .map(|x| x.abs())
+            .fold(T::zero(), |a, b| a.max(b))
     }
+}
+
+
+/* *********************** */
+/*      Cosine Angle       */
+/* *********************** */
+
+/// Calculates the cosine of the angle between two vectors.
+///
+/// For vectors a and b, the cosine of the angle θ between them is:
+/// cos(θ) = (a · b) / (||a|| ||b||)
+/// Where (a · b) is the dot product and ||a|| and ||b|| are the magnitudes of the vectors.
+///
+/// # Arguments
+/// * `u` - A reference to the first vector
+/// * `v` - A reference to the second vector
+///
+/// # Returns
+/// The cosine of the angle between the two vectors as a value of type `T`.
+///
+/// # Type Parameters
+/// * `T` - The floating-point type of the vector components
+/// * `N` - The dimensionality of the vectors
+///
+/// # Type Constraints
+/// * `T: Float` - The component type must be a floating-point type
+/// * `T: Sum` - The component type must support summation
+pub fn angle_cos<T, const N: usize>(u: &Vector<T, N>, v: &Vector<T, N>) -> T
+where
+    T: Float,
+    T: Sum,
+{
+    let dot_product = u.dot(*v);
+    let norm_u = u.norm();
+    let norm_v = v.norm();
+    dot_product / (norm_u * norm_v)
+}
+
+
+/// Computes the cross product of two 3-dimensional vectors.
+///
+/// The cross product u × v is defined for 3D vectors as:
+/// u × v = [u2v3 - u3v2, u3v1 - u1v3, u1v2 - u2v1]
+///
+/// # Arguments
+/// * `u` - A reference to the first 3D vector
+/// * `v` - A reference to the second 3D vector
+///
+/// # Returns
+/// A new `Vector<T, 3>` representing the cross product of `u` and `v`.
+///
+/// # Type Parameters
+/// * `T` - The floating-point type of the vector components
+/// * `N` - The dimensionality of the vectors (should be 3)
+///
+/// # Panics
+/// This function will panic if the input vectors are not 3-dimensional.
+///
+/// # Examples
+/// ```
+/// let u = Vector::from([0., 0., 1.]);
+/// let v = Vector::from([1., 0., 0.]);
+/// assert_eq!(cross_product(&u, &v), Vector::from([0., 1., 0.]));
+///
+/// let u = Vector::from([1., 2., 3.]);
+/// let v = Vector::from([4., 5., 6.]);
+/// assert_eq!(cross_product(&u, &v), Vector::from([-3., 6., -3.]));
+///
+/// let u = Vector::from([4., 2., -3.]);
+/// let v = Vector::from([-2., -5., 16.]);
+/// assert_eq!(cross_product(&u, &v), Vector::from([17., -58., -16.]));
+/// ```
+pub fn cross_product<T, const N: usize>(u: &Vector<T, N>, v: &Vector<T, N>) -> Vector<T, 3>
+where
+    T: Float + Default
+{
+    assert_eq!(N, 3, "Cross product is only defined for 3D vectors");
+
+    Vector::from([
+        u[1] * v[2] - u[2] * v[1],
+        u[2] * v[0] - u[0] * v[2],
+        u[0] * v[1] - u[1] * v[0],
+    ])
 }
