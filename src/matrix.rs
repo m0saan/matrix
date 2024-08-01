@@ -4,6 +4,8 @@ use std::fmt::Display;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 
+use crate::Vector;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix<T, const M: usize, const N: usize> {
     pub data: [[T; N]; M],
@@ -11,7 +13,7 @@ pub struct Matrix<T, const M: usize, const N: usize> {
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: AddAssign + SubAssign + MulAssign + Copy + Default
+    T: Copy + Default,
 {
     pub fn from(data: [[T; N]; M]) -> Self {
         Self { data }
@@ -22,9 +24,16 @@ where
     }
 
     pub fn zero() -> Self {
-        Self{data: [[T::default(); N]; M]}
+        Self {
+            data: [[T::default(); N]; M],
+        }
     }
+}
 
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+where
+    T: AddAssign + SubAssign + MulAssign + Copy + Default,
+{
     pub fn add(&mut self, other: &Self) {
         for (l_row, r_row) in self.data.iter_mut().zip(other.data.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
@@ -48,7 +57,6 @@ where
         }
     }
 }
-
 impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M, N> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
         &mut self.data[index.0][index.1]
@@ -148,5 +156,32 @@ where
         }
         write!(f, "\n")?;
         Ok(())
+    }
+}
+
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+where
+    T: Num + Copy + AddAssign + Default + Display,
+{
+    pub fn mul_vec(&mut self, vec: Vector<T, N>) -> Vector<T, N> {
+        let mut result = Vector::zero();
+        for (idx, row) in self.data.iter_mut().enumerate() {
+            for (e1, e2) in row.iter_mut().zip(vec.data.iter()) {
+                result[idx] += *e1 * *e2;
+            }
+        }
+        result
+    }
+
+    pub fn mul_mat(&mut self, mat: Matrix<T, M, N>) -> Matrix<T, M, N> {
+        let mut result = Matrix::zero();
+        for i in 0..M {
+            for j in 0..N {
+                for k in 0..N {
+                    result[(i, j)] += self[(i, k)] * mat[(k, j)];
+                }
+            }
+        }
+        result
     }
 }
