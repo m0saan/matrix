@@ -1,4 +1,4 @@
-use matrix::{cross_product, Vector};
+use matrix::{angle_cos, cross_product, Matrix, Vector};
 
 fn main() {
     // let mut u = Vector::from([2., 3.]);
