@@ -124,4 +124,19 @@ mod matrix_tests {
         let v = Matrix::from([[2., 1.], [4., 2.]]);
         assert_eq!(u.mul_mat(v).data, [[-14., -7.], [44., 22.]]); // [2., 1.] [44., 22.]
     }
+
+    #[test]
+    fn test_trace() {
+        let mut m = Matrix::from([[2., 3.], [5., 7.]]);
+        assert_eq!(m.trace(), 9.);
+
+        let mut u = Matrix::from([[1., 0.], [0., 1.]]);
+        assert_eq!(u.trace(), 2.); // 2.0
+
+        let mut u = Matrix::from([[2., -5., 0.], [4., 3., 7.], [-2., 3., 4.]]);
+        assert_eq!(u.trace(), 9.); // 9.0
+
+        let mut u = Matrix::from([[-2., -8., 4.], [1., -23., 4.], [0., 6., 4.]]);
+        assert_eq!(u.trace(), -21.); // -21.0
+    }
 }

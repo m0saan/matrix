@@ -161,7 +161,7 @@ where
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Num + Copy + AddAssign + Default + Display,
+    T: Num + Copy + AddAssign + Default,
 {
     pub fn mul_vec(&mut self, vec: Vector<T, N>) -> Vector<T, N> {
         let mut result = Vector::zero();
@@ -181,6 +181,21 @@ where
                     result[(i, j)] += self[(i, k)] * mat[(k, j)];
                 }
             }
+        }
+        result
+    }
+}
+
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+where
+    T: Num + Copy + AddAssign + Default,
+{
+    pub fn trace(&mut self) -> T {
+        assert!(M == N, "Matrix must be square to calculate trace");
+
+        let mut result = T::default();
+        for i in 0..M {
+            result += self[(i, i)];
         }
         result
     }
