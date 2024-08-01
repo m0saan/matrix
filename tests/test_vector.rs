@@ -133,7 +133,7 @@ mod vector_tests {
     fn test_mul_with_vector_trait() {
         let u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
-        assert_eq!(u*v, 31.);
+        assert_eq!(u * v, 31.);
     }
 
     #[test]

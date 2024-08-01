@@ -1,5 +1,5 @@
 mod ops_tests {
-    use::matrix::{linear_combination, angle_cos, cross_product, Vector};
+    use ::matrix::{angle_cos, cross_product, linear_combination, Vector};
 
     #[test]
     fn test_linear_combination() {
@@ -18,9 +18,7 @@ mod ops_tests {
         let expected = Vector::from([10., 0., 230.]);
         let result = linear_combination(&mut [v1, v2], &[10., -2.]);
         assert_eq!(result.data, expected.data); // [10.][0.][230.]
-
     }
-
 
     #[test]
     fn test_angle_cos() {
@@ -33,7 +31,7 @@ mod ops_tests {
         assert!((angle_cos(&u, &v) - 0.0) < f64::EPSILON); // 0.0
 
         let u = Vector::from([-1., 1.]);
-        let v = Vector::from([ 1., -1.]);
+        let v = Vector::from([1., -1.]);
         assert!((angle_cos(&u, &v) - 1.0) < f64::EPSILON); // -1.0
 
         let u = Vector::from([2., 1.]);
@@ -45,7 +43,6 @@ mod ops_tests {
         println!("{:?}", angle_cos(&u, &v));
         assert!((angle_cos(&u, &v) - 0.974631846).abs() < f32::EPSILON); // 0.974631846
     }
-
 
     #[test]
     fn test_cross_product() {

@@ -50,7 +50,9 @@ where
     }
 
     pub fn zero() -> Self {
-        Self{data: [T::default(); N]}
+        Self {
+            data: [T::default(); N],
+        }
     }
 }
 
@@ -82,7 +84,11 @@ where
     T: Num + Sum + Copy + Clone,
 {
     pub fn dot(&self, v: Self) -> T {
-        self.data.iter().zip(v.data.iter()).map(|(a, b)| *a * *b).sum()
+        self.data
+            .iter()
+            .zip(v.data.iter())
+            .map(|(a, b)| *a * *b)
+            .sum()
     }
 }
 
