@@ -1,3 +1,7 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+#![allow(unused_imports)]
+
 use matrix::{angle_cos, cross_product, Matrix, Vector};
 
 fn main() {
