@@ -4,21 +4,25 @@ use std::fmt::Display;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix<T, const M: usize, const N: usize> {
-    pub data: [[T; M]; N],
+    pub data: [[T; N]; M],
 }
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: AddAssign + SubAssign + MulAssign + Copy,
+    T: AddAssign + SubAssign + MulAssign + Copy + Default
 {
-    pub fn from(data: [[T; M]; N]) -> Self {
+    pub fn from(data: [[T; N]; M]) -> Self {
         Self { data }
     }
 
     pub const fn size(&self) -> (usize, usize) {
         (M, N)
+    }
+
+    pub fn zero() -> Self {
+        Self{data: [[T::default(); N]; M]}
     }
 
     pub fn add(&mut self, other: &Self) {
