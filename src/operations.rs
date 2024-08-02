@@ -29,7 +29,7 @@ where
 
     let mut result = Vector::zero();
     for (vector, scalar) in vectors.iter_mut().zip(scalars.iter()) {
-        for (result_elem, vector_elem) in result.data.iter_mut().zip(vector.data.iter()) {
+        for (result_elem, vector_elem) in result.store.iter_mut().zip(vector.store.iter()) {
             *result_elem = *result_elem + *vector_elem * *scalar;
         }
     }

@@ -13,11 +13,11 @@ mod ops_tests {
 
         let expected = Vector::from([10., -2., 0.5]);
         let result = linear_combination(&mut [e1, e2, e3], &[10., -2., 0.5]);
-        assert_eq!(result.data, expected.data); // [10.] [-2.]  [0.5]
+        assert_eq!(result.store, expected.store); // [10.] [-2.]  [0.5]
 
         let expected = Vector::from([10., 0., 230.]);
         let result = linear_combination(&mut [v1, v2], &[10., -2.]);
-        assert_eq!(result.data, expected.data); // [10.][0.][230.]
+        assert_eq!(result.store, expected.store); // [10.][0.][230.]
     }
 
     #[test]
@@ -49,16 +49,16 @@ mod ops_tests {
         let u = Vector::from([0., 0., 1.]);
         let v = Vector::from([1., 0., 0.]);
         let result = cross_product(&u, &v);
-        assert_eq!(result.data, Vector::from([0., 1., 0.]).data); // [0.] [1.] [0.]
+        assert_eq!(result.store, Vector::from([0., 1., 0.]).store); // [0.] [1.] [0.]
 
         let u = Vector::from([1., 2., 3.]);
         let v = Vector::from([4., 5., 6.]);
         let result = cross_product(&u, &v);
-        assert_eq!(result.data, Vector::from([-3., 6., -3.]).data); // [-3.] [6.] [-3.]
+        assert_eq!(result.store, Vector::from([-3., 6., -3.]).store); // [-3.] [6.] [-3.]
 
         let u = Vector::from([4., 2., -3.]);
         let v = Vector::from([-2., -5., 16.]);
         let result = cross_product(&u, &v);
-        assert_eq!(result.data, Vector::from([17., -58., -16.]).data); // [17.] [-58.] [-16.]
+        assert_eq!(result.store, Vector::from([17., -58., -16.]).store); // [17.] [-58.] [-16.]
     }
 }

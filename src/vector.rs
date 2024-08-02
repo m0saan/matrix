@@ -6,12 +6,12 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector<T, const N: usize> {
-    pub data: [T; N],
+    pub store: [T; N],
 }
 
 impl<T, const N: usize> IndexMut<usize> for Vector<T, N> {
     fn index_mut(&mut self, index: usize) -> &mut T {
-        &mut self.data[index]
+        &mut self.store[index]
     }
 }
 
@@ -19,7 +19,7 @@ impl<T, const N: usize> Index<usize> for Vector<T, N> {
     type Output = T;
 
     fn index(&self, index: usize) -> &Self::Output {
-        &self.data.index(index)
+        &self.store.index(index)
     }
 }
 
@@ -27,13 +27,13 @@ impl<T, const N: usize> Deref for Vector<T, N> {
     type Target = [T; N];
 
     fn deref(&self) -> &Self::Target {
-        &self.data
+        &self.store
     }
 }
 
 impl<T, const N: usize> DerefMut for Vector<T, N> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.data
+        &mut self.store
     }
 }
 
@@ -42,7 +42,7 @@ where
     T: Copy + Default,
 {
     pub fn from(data: [T; N]) -> Self {
-        Self { data }
+        Self { store: data }
     }
 
     pub const fn size(&self) -> usize {
@@ -51,7 +51,7 @@ where
 
     pub fn zero() -> Self {
         Self {
-            data: [T::default(); N],
+            store: [T::default(); N],
         }
     }
 }
@@ -61,19 +61,19 @@ where
     T: Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Copy + Clone + Default + PartialOrd,
 {
     pub fn add(&mut self, rhs: &Self) {
-        for (lsh_e, rhs_e) in self.data.iter_mut().zip(rhs.data.iter()) {
+        for (lsh_e, rhs_e) in self.store.iter_mut().zip(rhs.store.iter()) {
             *lsh_e = *lsh_e + *rhs_e;
         }
     }
 
     pub fn sub(&mut self, rhs: &Self) {
-        for (lsh_e, rhs_e) in self.data.iter_mut().zip(rhs.data.iter()) {
+        for (lsh_e, rhs_e) in self.store.iter_mut().zip(rhs.store.iter()) {
             *lsh_e = *lsh_e - *rhs_e;
         }
     }
 
     pub fn scl(&mut self, scalar: T) {
-        for elem in self.data.iter_mut() {
+        for elem in self.store.iter_mut() {
             *elem = *elem * scalar;
         }
     }
@@ -84,9 +84,9 @@ where
     T: Num + Sum + Copy + Clone,
 {
     pub fn dot(&self, v: Self) -> T {
-        self.data
+        self.store
             .iter()
-            .zip(v.data.iter())
+            .zip(v.store.iter())
             .map(|(a, b)| *a * *b)
             .sum()
     }
@@ -100,7 +100,7 @@ where
 
     fn add(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
-        for (e1, e2) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (e1, e2) in result.store.iter_mut().zip(rhs.store.iter()) {
             *e1 = *e1 + *e2;
         }
         result
@@ -124,7 +124,7 @@ where
 
     fn sub(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
-        for (e1, e2) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (e1, e2) in result.store.iter_mut().zip(rhs.store.iter()) {
             *e1 = *e1 - *e2;
         }
         result
@@ -149,7 +149,7 @@ where
 
     fn mul(self, scalar: f32) -> Self::Output {
         let mut result = self.clone();
-        for element in result.data.iter_mut() {
+        for element in result.store.iter_mut() {
             *element = element.clone() * scalar;
         }
         result
@@ -164,9 +164,9 @@ where
     type Output = T;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        self.data
+        self.store
             .into_iter()
-            .zip(rhs.data.into_iter())
+            .zip(rhs.store.into_iter())
             .map(|(a, b)| a * b)
             .sum()
     }
@@ -181,7 +181,7 @@ where
 
     fn neg(self) -> Self::Output {
         let mut result = self.clone();
-        for element in result.data.iter_mut() {
+        for element in result.store.iter_mut() {
             *element = -(*element);
         }
         result
@@ -194,7 +194,7 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "//-> [")?;
-        for (i, val) in self.data.iter().enumerate() {
+        for (i, val) in self.store.iter().enumerate() {
             if i > 0 {
                 write!(f, ", ")?;
             }
@@ -218,7 +218,7 @@ where
     /// # Returns
     /// The L1 norm as a value of type `T`.
     pub fn norm_1(&self) -> T {
-        self.data.iter().map(|x| x.abs()).sum()
+        self.store.iter().map(|x| x.abs()).sum()
     }
 
     /// Calculates the L2 norm (Euclidean norm) of the vector.
@@ -228,7 +228,7 @@ where
     /// # Returns
     /// The L2 norm as a value of type `T`.
     pub fn norm(&self) -> T {
-        self.data.iter().map(|x| x.powi(2)).sum::<T>().sqrt()
+        self.store.iter().map(|x| x.powi(2)).sum::<T>().sqrt()
     }
 
     /// Calculates the L-infinity norm (maximum norm) of the vector.
@@ -238,7 +238,7 @@ where
     /// # Returns
     /// The L-infinity norm as a value of type `T`.
     pub fn norm_inf(&self) -> T {
-        self.data
+        self.store
             .iter()
             .map(|x| x.abs())
             .fold(T::zero(), |a, b| a.max(b))

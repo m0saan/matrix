@@ -5,10 +5,10 @@ mod vector_tests {
     #[test]
     fn test_from() {
         let u = Vector::from([2., 3.]);
-        assert_eq!(u.data, [2., 3.]);
+        assert_eq!(u.store, [2., 3.]);
 
         let v = Vector::from([5., 7., 9., 11.]);
-        assert_eq!(v.data, [5., 7., 9., 11.]);
+        assert_eq!(v.store, [5., 7., 9., 11.]);
     }
 
     #[test]
@@ -23,10 +23,10 @@ mod vector_tests {
     #[test]
     fn test_zero() {
         let u = Vector::<f32, 3>::zero();
-        assert_eq!(u.data, [0., 0., 0.]);
+        assert_eq!(u.store, [0., 0., 0.]);
 
         let v = Vector::<i32, 5>::zero();
-        assert_eq!(v.data, [0, 0, 0, 0, 0]);
+        assert_eq!(v.store, [0, 0, 0, 0, 0]);
     }
 
     #[test]
@@ -34,7 +34,7 @@ mod vector_tests {
         let mut u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         u.add(&v);
-        assert_eq!(u.data, [7., 10.]);
+        assert_eq!(u.store, [7., 10.]);
     }
 
     #[test]
@@ -42,21 +42,21 @@ mod vector_tests {
         let mut u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         u.sub(&v);
-        assert_eq!(u.data, [-3., -4.]);
+        assert_eq!(u.store, [-3., -4.]);
     }
 
     #[test]
     fn test_scl() {
         let mut u = Vector::from([2., 3.]);
         u.scl(3.);
-        assert_eq!(u.data, [6., 9.]);
+        assert_eq!(u.store, [6., 9.]);
     }
 
     #[test]
     fn test_neg() {
         let u = Vector::from([2., 3.]);
         let v = -u;
-        assert_eq!(v.data, [-2., -3.]);
+        assert_eq!(v.store, [-2., -3.]);
     }
 
     #[test]
@@ -95,7 +95,7 @@ mod vector_tests {
         let u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         let w = u + v;
-        assert_eq!(w.data, [7., 10.]);
+        assert_eq!(w.store, [7., 10.]);
     }
 
     #[test]
@@ -103,7 +103,7 @@ mod vector_tests {
         let mut u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         u += v;
-        assert_eq!(u.data, [7., 10.]);
+        assert_eq!(u.store, [7., 10.]);
     }
 
     #[test]
@@ -111,7 +111,7 @@ mod vector_tests {
         let u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         let w = u - v;
-        assert_eq!(w.data, [-3., -4.]);
+        assert_eq!(w.store, [-3., -4.]);
     }
 
     #[test]
@@ -119,14 +119,14 @@ mod vector_tests {
         let mut u = Vector::from([2., 3.]);
         let v = Vector::from([5., 7.]);
         u -= v;
-        assert_eq!(u.data, [-3., -4.]);
+        assert_eq!(u.store, [-3., -4.]);
     }
 
     #[test]
     fn test_mul_with_number_trait() {
         let u = Vector::from([2., 3.]);
         let r = u * 3.;
-        assert_eq!(r.data, [6., 9.]);
+        assert_eq!(r.store, [6., 9.]);
     }
 
     #[test]
@@ -155,7 +155,7 @@ mod vector_tests {
         let mut u = Vector::from([2., 3.]);
         u[0] = 5.;
         u[1] = 7.;
-        assert_eq!(u.data, [5., 7.]);
+        assert_eq!(u.store, [5., 7.]);
     }
 
     #[test]
@@ -181,6 +181,6 @@ mod vector_tests {
     fn test_deref_mut() {
         let mut u = Vector::from([2., 3.]);
         *u = [5., 7.];
-        assert_eq!(u.data, [5., 7.]);
+        assert_eq!(u.store, [5., 7.]);
     }
 }

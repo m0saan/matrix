@@ -8,7 +8,7 @@ use crate::Vector;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix<T, const M: usize, const N: usize> {
-    pub data: [[T; N]; M],
+    pub store: [[T; N]; M],
 }
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
@@ -16,7 +16,7 @@ where
     T: Copy + Default,
 {
     pub fn from(data: [[T; N]; M]) -> Self {
-        Self { data }
+        Self { store: data }
     }
 
     pub const fn size(&self) -> (usize, usize) {
@@ -25,7 +25,7 @@ where
 
     pub fn zero() -> Self {
         Self {
-            data: [[T::default(); N]; M],
+            store: [[T::default(); N]; M],
         }
     }
 }
@@ -35,7 +35,7 @@ where
     T: AddAssign + SubAssign + MulAssign + Copy + Default,
 {
     pub fn add(&mut self, other: &Self) {
-        for (l_row, r_row) in self.data.iter_mut().zip(other.data.iter()) {
+        for (l_row, r_row) in self.store.iter_mut().zip(other.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
                 *l += *r;
             }
@@ -43,14 +43,14 @@ where
     }
 
     pub fn sub(&mut self, other: &Self) {
-        for (l_row, r_row) in self.data.iter_mut().zip(other.data.iter()) {
+        for (l_row, r_row) in self.store.iter_mut().zip(other.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
                 *l -= *r;
             }
         }
     }
     pub fn scl(&mut self, scalar: T) {
-        for row in self.data.iter_mut() {
+        for row in self.store.iter_mut() {
             for elem in row.iter_mut() {
                 *elem *= scalar;
             }
@@ -59,7 +59,7 @@ where
 }
 impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M, N> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
-        &mut self.data[index.0][index.1]
+        &mut self.store[index.0][index.1]
     }
 }
 
@@ -67,7 +67,7 @@ impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N
     type Output = T;
 
     fn index(&self, index: (usize, usize)) -> &Self::Output {
-        &self.data.index(index.0).index(index.1)
+        &self.store.index(index.0).index(index.1)
     }
 }
 
@@ -93,7 +93,7 @@ where
 
     fn add(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
-        for (l_row, r_row) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (l_row, r_row) in result.store.iter_mut().zip(rhs.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
                 *l += *r;
             }
@@ -110,7 +110,7 @@ where
 
     fn sub(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
-        for (l_row, r_row) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (l_row, r_row) in result.store.iter_mut().zip(rhs.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
                 *l -= *r;
             }
@@ -127,7 +127,7 @@ where
 
     fn mul(self, rhs: T) -> Self::Output {
         let mut result = self.clone();
-        for row in result.data.iter_mut() {
+        for row in result.store.iter_mut() {
             for elem in row.iter_mut() {
                 *elem *= rhs;
             }
@@ -141,7 +141,7 @@ where
     T: AddAssign + SubAssign + MulAssign + Copy + std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        for (i, row) in self.data.iter().enumerate() {
+        for (i, row) in self.store.iter().enumerate() {
             if i > 0 {
                 writeln!(f)?;
             }
@@ -165,8 +165,8 @@ where
 {
     pub fn mul_vec(&mut self, vec: Vector<T, N>) -> Vector<T, N> {
         let mut result = Vector::zero();
-        for (idx, row) in self.data.iter_mut().enumerate() {
-            for (e1, e2) in row.iter_mut().zip(vec.data.iter()) {
+        for (idx, row) in self.store.iter_mut().enumerate() {
+            for (e1, e2) in row.iter_mut().zip(vec.store.iter()) {
                 result[idx] += *e1 * *e2;
             }
         }
