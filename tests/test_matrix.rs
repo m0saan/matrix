@@ -139,4 +139,86 @@ mod matrix_tests {
         let mut u = Matrix::from([[-2., -8., 4.], [1., -23., 4.], [0., 6., 4.]]);
         assert_eq!(u.trace(), -21.); // -21.0
     }
+
+    #[test]
+    fn test_transpose() {
+        let mut m = Matrix::from([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let result = m.transpose();
+        let expected = Matrix::from([[1., 4., 7.], [2., 5., 8.], [3., 6., 9.]]);
+        assert_eq!(result.store, expected.store);
+
+        let mut u = Matrix::from([[1., 0.], [0., 1.]]);
+        let result = u.transpose();
+        let expected = Matrix::from([[1., 0.], [0., 1.]]);
+        assert_eq!(result.store, expected.store);
+
+        let mut u = Matrix::from([[2., -5., 0.], [4., 3., 7.], [-2., 3., 4.]]);
+        let result = u.transpose();
+        let expected = Matrix::from([[2., 4., -2.], [-5., 3., 3.], [0., 7., 4.]]);
+        assert_eq!(result.store, expected.store);
+
+        let mut u = Matrix::from([[-2., -8., 4.], [1., -23., 4.], [0., 6., 4.]]);
+        let result = u.transpose();
+        let expected = Matrix::from([[-2., 1., 0.], [-8., -23., 6.], [4., 4., 4.]]);
+        assert_eq!(result.store, expected.store);
+    }
+
+    // #[test]
+    // fn test_determinant() {
+    //     let mut m = Matrix::from([[1., 2.], [3., 4.]]);
+    //     assert_eq!(m.determinant(), -2.);
+
+    //     let mut u = Matrix::from([[1., 0.], [0., 1.]]);
+    //     assert_eq!(u.determinant(), 1.);
+
+    //     let mut u = Matrix::from([[2., -5., 0.], [4., 3., 7.], [-2., 3., 4.]]);
+    //     assert_eq!(u.determinant(), 117.);
+
+    //     let mut u = Matrix::from([[-2., -8., 4.], [1., -23., 4.], [0., 6., 4.]]);
+    //     assert_eq!(u.determinant(), 0.);
+    // }
+    #[test]
+    fn test_row_echelon_from() {
+        let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
+        let result = u.row_echelon();
+        let expected = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
+        assert_eq!(result.store, expected.store);
+        // [1.0, 0.0, 0.0]
+        // [0.0, 1.0, 0.0]
+        // [0.0, 0.0, 1.0]
+
+        let u = Matrix::from([[1., 2.], [3., 4.]]);
+        let result = u.row_echelon();
+        let expected = Matrix::from([[1., 0.], [0., 1.]]);
+        assert_eq!(result.store, expected.store);
+        // [1.0, 0.0]
+        // [0.0, 1.0]
+
+        let u = Matrix::from([[1., 2.], [2., 4.]]);
+        let result = u.row_echelon();
+        let expected = Matrix::from([[1., 2.], [0., 0.]]);
+        assert_eq!(result.store, expected.store);
+        // [1.0, 2.0]
+        // [0.0, 0.0]
+
+        let u = Matrix::from([
+            [8., 5., -2., 4., 28.],
+            [4., 2.5, 20., 4., -4.],
+            [8., 5., 1., 4., 17.],
+        ]);
+        let result: f32 = u.row_echelon().store.as_flattened().iter().sum();
+        let expected: f32 = Matrix::from([
+            [1.0, 0.625, 0.0, 0.0, -12.1666667],
+            [0.0, 0.0, 1.0, 0.0, -3.6666667],
+            [0.0, 0.0, 0.0, 1.0, 29.5],
+        ] as [[f32; 5]; 3])
+        .store
+        .as_flattened()
+        .iter()
+        .sum();
+        assert!((result - expected).abs() < 0.0001);
+        // [1.0, 0.625, 0.0, 0.0, -12.1666667]
+        // [0.0, 0.0, 1.0, 0.0, -3.6666667]
+        // [0.0, 0.0, 0.0, 1.0, 29.5 ]
+    }
 }
