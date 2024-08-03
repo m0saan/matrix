@@ -7,6 +7,39 @@ use super::Vector;
 /* ***************************** */
 /*      Linear Combination      */
 /* *************************** */
+
+/// Computes the linear combination of a set of vectors.
+///
+/// A linear combination is the sum of scalar multiples of vectors.
+///
+/// # Arguments
+///
+/// * `vectors` - A mutable slice of vectors to be combined
+/// * `scalars` - A slice of scalar values to multiply with each vector
+///
+/// # Returns
+///
+/// A new `Vector<T, N>` representing the linear combination of the input vectors.
+///
+/// # Examples
+///
+/// ```
+/// use rustlinalg::{Vector, linear_combination};
+///
+/// let mut v1 = Vector::from([1.0, 2.0, 3.0]);
+/// let mut v2 = Vector::from([4.0, 5.0, 6.0]);
+/// let scalars = [2.0, 3.0];
+///
+/// let result = linear_combination(&mut [v1, v2], &scalars);
+/// assert_eq!(result, Vector::from([14.0, 19.0, 24.0]));
+/// ```
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The number of vectors and scalars are not equal
+/// - The vector slice is empty
+
 // O(n)
 
 pub fn linear_combination<T, const N: usize>(
