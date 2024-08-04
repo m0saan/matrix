@@ -24,7 +24,7 @@ use super::Vector;
 /// # Examples
 ///
 /// ```
-/// use rustlinalg::{Vector, linear_combination};
+/// use matrix::{Vector, linear_combination};
 ///
 /// let mut v1 = Vector::from([1.0, 2.0, 3.0]);
 /// let mut v2 = Vector::from([4.0, 5.0, 6.0]);
@@ -98,7 +98,7 @@ where
     T: Float,
     T: Sum,
 {
-    let dot_product = u.dot(*v);
+    let dot_product = u.dot(v);
     let norm_u = u.norm();
     let norm_v = v.norm();
     dot_product / (norm_u * norm_v)
