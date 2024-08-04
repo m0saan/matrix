@@ -1,7 +1,7 @@
 use num::Num;
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
-use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign, Neg};
+use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::Vector;
@@ -27,6 +27,20 @@ where
         Self {
             store: [[T::default(); N]; M],
         }
+    }
+
+    #[allow(dead_code)]
+    fn map<F>(&self, mut f: F) -> Matrix<T, M, N>
+    where
+        F: FnMut(T) -> T,
+    {
+        let mut result = Matrix::<T, M, N>::zero();
+        for i in 0..M {
+            for j in 0..N {
+                result[(i, j)] = f(self[(i, j)]);
+            }
+        }
+        result
     }
 }
 
@@ -189,7 +203,6 @@ where
     }
 }
 
-
 impl<T, const M: usize, const N: usize> Display for Matrix<T, M, N>
 where
     T: AddAssign + SubAssign + MulAssign + Copy + std::fmt::Display,
@@ -305,7 +318,6 @@ where
                     i = r;
                     pivot = pivot + 1;
                     if column_count == pivot {
-                        pivot = pivot - 1;
                         break 'outer;
                     }
                 }
@@ -335,68 +347,78 @@ where
     }
 }
 
-
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign,
 {
     pub fn determinant(&self) -> T {
         match M {
-            0 => T::default(),
             1 => self[(0, 0)],
             2 => self[(0, 0)] * self[(1, 1)] - self[(0, 1)] * self[(1, 0)],
-            3 => self[(0, 0)] * self[(1, 1)] * self[(2, 2)]
-                + self[(0, 1)] * self[(1, 2)] * self[(2, 0)]
-                + self[(0, 2)] * self[(1, 0)] * self[(2, 1)]
-                - self[(0, 2)] * self[(1, 1)] * self[(2, 0)]
-                - self[(0, 1)] * self[(1, 0)] * self[(2, 2)]
-                - self[(0, 0)] * self[(1, 2)] * self[(2, 1)],
-            4 => {
-                let mut det = T::default();
-
-                for i in 0..4 {
-                    let sign = if i % 2 == 0 { T::default() + T::one() } else { T::default() - T::one() };
-                    let cofactor_matrix = self.get_cofactor(0, i);
-                    det = det + sign * self[(0, i)] * cofactor_matrix.determinant();
-                }
-                det
-            },
+            3 => self.determinant_3x3(),
+            4 => (0..4)
+                .map(|i| {
+                    let sign = if i % 2 == 0 { T::one() } else { -T::one() };
+                    let cofactor = self.get_cofactor(0, i);
+                    sign * self[(0, i)] * cofactor.determinant_3x3()
+                })
+                .fold(T::default(), |acc, x| acc + x),
             _ => panic!("Determinant not implemented for matrices larger than 4x4"),
         }
     }
 
-    fn get_cofactor(&self, row: usize, col: usize) -> Matrix<T, 3, 3> {
-            let mut cofactor_matrix = Matrix::<T, 3, 3>::zero();
-            let mut row_index = 0;
+    fn determinant_3x3(&self) -> T {
+        self[(0, 0)] * (self[(1, 1)] * self[(2, 2)] - self[(1, 2)] * self[(2, 1)])
+            - self[(0, 1)] * (self[(1, 0)] * self[(2, 2)] - self[(1, 2)] * self[(2, 0)])
+            + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)])
+    }
 
-            for r in 0..4 {
-                if r == row { continue; }
-                let mut col_index = 0;
-                for c in 0..4 {
-                    if c == col { continue; }
-                    cofactor_matrix[(row_index, col_index)] = self[(r, c)];
-                    col_index += 1;
-                }
-                row_index += 1;
+    fn get_cofactor(&self, row: usize, col: usize) -> Matrix<T, M, N> {
+        let mut cofactor_matrix = Matrix::<T, M, N>::zero();
+        let mut row_index = 0;
+
+        for r in 0..M {
+            if r == row {
+                continue;
             }
-
-            cofactor_matrix
+            let mut col_index = 0;
+            for c in 0..N {
+                if c == col {
+                    continue;
+                }
+                cofactor_matrix[(row_index, col_index)] = self[(r, c)];
+                col_index += 1;
+            }
+            row_index += 1;
         }
+
+        cofactor_matrix
+    }
 }
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug,
 {
-    pub fn inverse(&self) -> Matrix<T, M, N> {
+    pub fn inverse(&self) -> Result<Matrix<T, M, N>, &'static str> {
         if M != N {
-            panic!("Matrix is not square");
+            return Err("Matrix must be square to calculate inverse");
         }
 
         let det = self.determinant();
-        if det == T::default() {
-            panic!("Matrix is singular");
+
+        if det == T::zero() {
+            return Err("Matrix is singular and has no inverse");
         }
-        todo!("Implement inverse")
+
+        let inv = Matrix::<T, M, N>::zero();
+        // for i in 0..M {
+        //     for j in 0..N {
+        //         let sign = if (i + j) % 2 == 0 { T::one() } else { -T::one() };
+        //         let cofactor = self.get_cofactor(i, j);
+        //         result[(j, i)] = sign * cofactor.determinant_3x3() / det;
+        //     }
+        // }
+        Ok(inv)
     }
 }

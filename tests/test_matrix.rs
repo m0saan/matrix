@@ -221,4 +221,36 @@ mod matrix_tests {
         // [0.0, 0.0, 1.0, 0.0, -3.6666667]
         // [0.0, 0.0, 0.0, 1.0, 29.5 ]
     }
+
+    #[test]
+    fn test_determinant() {
+        let m = Matrix::from([[1., 2.], [3., 4.]]);
+        assert_eq!(m.determinant(), -2.);
+
+        let u = Matrix::from([[1., 0.], [0., 1.]]);
+        assert_eq!(u.determinant(), 1.);
+
+        let u = Matrix::from([[2., -5., 0.], [4., 3., 7.], [-2., 3., 4.]]);
+        assert_eq!(u.determinant(), 132.);
+
+        let u = Matrix::from([[-2., -8., 4.], [1., -23., 4.], [0., 6., 4.]]);
+        assert_eq!(u.determinant(), 288.);
+
+        let u = Matrix::from([[1., -1.], [-1., 1.]]);
+        assert_eq!(u.determinant(), 0.); // 0.0
+
+        let u = Matrix::from([[2., 0., 0.], [0., 2., 0.], [0., 0., 2.]]);
+        assert_eq!(u.determinant(), 8.); // 8.0
+
+        let u = Matrix::from([[8., 5., -2.], [4., 7., 20.], [7., 6., 1.]]);
+        assert_eq!(u.determinant(), -174.); // -174.0
+
+        let u = Matrix::from([
+            [8., 5., -2., 4.],
+            [4., 2.5, 20., 4.],
+            [8., 5., 1., 4.],
+            [28., -4., 17., 1.],
+        ]);
+        assert_eq!(u.determinant(), 1032.); // 1032
+    }
 }

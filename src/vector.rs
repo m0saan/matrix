@@ -1,7 +1,6 @@
-//! # RustLinAlg
+//! # matrix
 //!
 //! A mini linear algebra library implemented in Rust.
-
 
 use num::{Float, Num, Signed};
 use std::fmt::Display;
@@ -14,7 +13,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 /// # Examples
 ///
 /// ```
-/// use rustlinalg::Vector;
+/// use matrix::Vector;
 ///
 /// let v = Vector::from([1, 2, 3]);
 /// assert_eq!(v[0], 1);
@@ -63,7 +62,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v = Vector::from([1, 2, 3]);
     /// ```
@@ -76,7 +75,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v: Vector<i32, 3> = Vector::from([1, 2, 3]);
     /// assert_eq!(v.size(), 3);
@@ -90,7 +89,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v: Vector<i32, 3> = Vector::zero();
     /// assert_eq!(v[0], 0);
@@ -113,7 +112,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let mut v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
@@ -133,7 +132,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let mut v1 = Vector::from([4, 5, 6]);
     /// let v2 = Vector::from([1, 2, 3]);
@@ -153,7 +152,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let mut v = Vector::from([1, 2, 3]);
     /// v.scl(2);
@@ -179,7 +178,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
@@ -204,7 +203,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
@@ -229,7 +228,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let mut v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
@@ -251,7 +250,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([4, 5, 6]);
     /// let v2 = Vector::from([1, 2, 3]);
@@ -276,7 +275,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let mut v1 = Vector::from([4, 5, 6]);
     /// let v2 = Vector::from([1, 2, 3]);
@@ -299,7 +298,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([1.0, 2.0, 3.0]);
     /// let v2 = v1 * 2.0;
@@ -327,7 +326,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
@@ -353,7 +352,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v1 = Vector::from([1, -2, 3]);
     /// let v2 = -v1;
@@ -377,7 +376,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use rustlinalg::Vector;
+    /// use matrix::Vector;
     ///
     /// let v = Vector::from([1.0, 2.5, 3.7]);
     /// println!("{}", v); // Outputs: //-> [1.0, 2.5, 3.7]
