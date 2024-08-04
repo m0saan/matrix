@@ -13,6 +13,7 @@ name = "matrix"
 version = "0.1.0"
 dependencies = [
  "num",
+ "num-complex",
 ]
 
 [[package]]
