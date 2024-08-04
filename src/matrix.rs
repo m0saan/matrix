@@ -1,4 +1,4 @@
-use num::Num;
+use num::{Float, Num};
 use std::fmt::{Debug, Display};
 
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
@@ -27,6 +27,16 @@ where
         Self {
             store: [[T::default(); N]; M],
         }
+    }
+
+    pub fn from_vecs(vecs: Vec<Vec<T>>) -> Self {
+        let mut store = [[T::default(); N]; M];
+        for (i, vec) in vecs.iter().enumerate() {
+            for (j, elem) in vec.iter().enumerate() {
+                store[i][j] = *elem;
+            }
+        }
+        Self { store }
     }
 
     #[allow(dead_code)]
@@ -230,6 +240,13 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Num + Copy + AddAssign + Default,
 {
+    /// Multiplies the matrix by a vector.
+    ///
+    /// # Arguments
+    /// * `vec` - The vector to multiply with the matrix.
+    ///
+    /// # Returns
+    /// The resulting vector of the multiplication.
     pub fn mul_vec(&mut self, vec: Vector<T, N>) -> Vector<T, N> {
         let mut result = Vector::zero();
         for (idx, row) in self.store.iter_mut().enumerate() {
@@ -240,6 +257,13 @@ where
         result
     }
 
+    /// Multiplies the matrix by another matrix.
+    ///
+    /// # Arguments
+    /// * `mat` - The matrix to multiply with.
+    ///
+    /// # Returns
+    /// The resulting matrix of the multiplication.
     pub fn mul_mat(&mut self, mat: Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut result = Matrix::zero();
         for i in 0..M {
@@ -268,6 +292,9 @@ where
     }
 }
 
+/* ********************************************* */
+/*            Exercise XX - Transpose            */
+/* ********************************************* */
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default,
@@ -283,6 +310,9 @@ where
     }
 }
 
+/* ********************************************** */
+/*             Exercise XX - Identity             */
+/* ********************************************** */
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default,
@@ -296,60 +326,79 @@ where
     }
 }
 
+/* ************************************************* */
+/*             Exercise 12 - Row Echelon             */
+/* ************************************************* */
+
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Mul + PartialEq + Num + Div<Output = T> + Sub<Output = T>,
+    T: Copy + Default + Mul<Output = T> + PartialEq + Num + Div<Output = T> + Sub<Output = T>,
 {
     pub fn row_echelon(&self) -> Matrix<T, M, N> {
         let mut result = self.clone();
-        // let mut matrix_out = result.store;
         let mut pivot = 0;
-        let row_count = M;
-        let column_count = N;
 
-        'outer: for r in 0..row_count {
-            if column_count <= pivot {
+        for r in 0..M {
+            if pivot >= N {
                 break;
             }
+
+            // Find the row with a non-zero pivot
             let mut i = r;
-            while result[(i, pivot)] == T::default() {
-                i = i + 1;
-                if i == row_count {
-                    i = r;
-                    pivot = pivot + 1;
-                    if column_count == pivot {
-                        break 'outer;
-                    }
+            while i < M && result[(i, pivot)] == T::default() {
+                i += 1;
+            }
+
+            if i == M {
+                pivot += 1;
+                if pivot >= N {
+                    break;
+                }
+                // No non-zero element found in this column, continue to the next column
+                continue;
+            }
+
+            // Swap the current row with the row containing the non-zero pivot
+            if i != r {
+                for j in 0..N {
+                    let temp = result[(r, j)];
+                    result[(r, j)] = result[(i, j)];
+                    result[(i, j)] = temp;
                 }
             }
-            for j in 0..row_count {
-                let temp = result[(r, j)];
-                result[(r, j)] = result[(i, j)];
-                result[(i, j)] = temp;
-            }
+
+            // Normalize the pivot row
             let divisor = result[(r, pivot)];
             if divisor != T::default() {
-                for j in 0..column_count {
+                for j in 0..N {
                     result[(r, j)] = result[(r, j)] / divisor;
                 }
             }
-            for j in 0..row_count {
-                if j != r {
-                    let hold = result[(j, pivot)];
-                    for k in 0..column_count {
-                        result[(j, k)] = result[(j, k)] - (hold * result[(r, k)]);
+
+            // Eliminate the pivot column in all other rows
+            for i in 0..M {
+                if i != r {
+                    let factor = result[(i, pivot)];
+                    for j in 0..N {
+                        result[(i, j)] = result[(i, j)] - factor * result[(r, j)];
                     }
                 }
             }
-            pivot = pivot + 1;
+
+            pivot += 1;
         }
+
         result
     }
 }
 
+/************************************************ * */
+/*            Exercise 12 - Determinant            */
+/************************************************ */
+
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign,
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug,
 {
     pub fn determinant(&self) -> T {
         match M {
@@ -373,8 +422,8 @@ where
             + self[(0, 2)] * (self[(1, 0)] * self[(2, 1)] - self[(1, 1)] * self[(2, 0)])
     }
 
-    fn get_cofactor(&self, row: usize, col: usize) -> Matrix<T, M, N> {
-        let mut cofactor_matrix = Matrix::<T, M, N>::zero();
+    fn get_cofactor(&self, row: usize, col: usize) -> Matrix<T, 3, 3> {
+        let mut cofactor_matrix = Matrix::<T, 3, 3>::zero();
         let mut row_index = 0;
 
         for r in 0..M {
@@ -391,14 +440,18 @@ where
             }
             row_index += 1;
         }
-
+        println!("{:?}", cofactor_matrix);
         cofactor_matrix
     }
 }
 
+/********************************************* */
+/*            Exercise 12 - Inverse            */
+/********************************************* */
+
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug,
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug + Float,
 {
     pub fn inverse(&self) -> Result<Matrix<T, M, N>, &'static str> {
         if M != N {
@@ -411,14 +464,115 @@ where
             return Err("Matrix is singular and has no inverse");
         }
 
-        let inv = Matrix::<T, M, N>::zero();
-        // for i in 0..M {
-        //     for j in 0..N {
-        //         let sign = if (i + j) % 2 == 0 { T::one() } else { -T::one() };
-        //         let cofactor = self.get_cofactor(i, j);
-        //         result[(j, i)] = sign * cofactor.determinant_3x3() / det;
-        //     }
-        // }
+        let mut inv = Matrix::<T, M, N>::zero();
+        for i in 0..M {
+            for j in 0..N {
+                let coffactor = match M {
+                    2 => self.cofactor1x1(i, j).determinant(),
+                    3 => self.cofactor2x2(i, j).determinant(),
+                    _ => return Err("Inverse not implemented for matrices larger than 3x3"),
+                };
+                let base: i32 = -1;
+                inv[(i, j)] = (coffactor * T::from(base.pow((i + j) as u32)).unwrap()) / det;
+            }
+        }
+        let inv = inv.transpose();
         Ok(inv)
+    }
+}
+
+/***************************************** */
+/*            Exercise 13 - Rank            */
+/***************************************** */
+
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+where
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + PartialEq,
+{
+    pub fn rank(&self) -> usize {
+        let mut rank = M;
+        let row_echelon = self.row_echelon();
+        for i in 0..M {
+            let mut is_zero = true;
+            for j in 0..N {
+                if row_echelon[(i, j)] != T::default() {
+                    is_zero = false;
+                    break;
+                }
+            }
+            if is_zero {
+                rank -= 1;
+            }
+        }
+        rank
+    }
+}
+
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+where
+    T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + PartialEq,
+{
+    #[allow(dead_code)]
+    fn cofactor3x3(&self, row: usize, col: usize) -> Matrix<T, 3, 3> {
+        let mut cofactor_matrix = Matrix::<T, 3, 3>::zero();
+        let mut row_index = 0;
+
+        for r in 0..row {
+            if r == row {
+                continue;
+            }
+            let mut col_index = 0;
+            for c in 0..col {
+                if c == col {
+                    continue;
+                }
+                cofactor_matrix[(row_index, col_index)] = self[(r, c)];
+                col_index += 1;
+            }
+            row_index += 1;
+        }
+        cofactor_matrix
+    }
+
+    fn cofactor2x2(&self, row: usize, col: usize) -> Matrix<T, 2, 2> {
+        let mut cofactor_matrix = Matrix::<T, 2, 2>::zero();
+        let mut row_index = 0;
+
+        for r in 0..M {
+            if r == row {
+                continue;
+            }
+            let mut col_index = 0;
+            for c in 0..N {
+                if c == col {
+                    continue;
+                }
+                cofactor_matrix[(row_index, col_index)] = self[(r, c)];
+                col_index += 1;
+            }
+            row_index += 1;
+        }
+        cofactor_matrix
+    }
+
+    fn cofactor1x1(&self, row: usize, col: usize) -> Matrix<T, 1, 1> {
+        let mut cofactor_matrix = Matrix::<T, 1, 1>::zero();
+        let mut row_index = 0;
+
+        for r in 0..M {
+            if r == row {
+                continue;
+            }
+            let mut col_index = 0;
+            for c in 0..N {
+                if c == col {
+                    continue;
+                }
+                cofactor_matrix[(row_index, col_index)] = self[(r, c)];
+                col_index += 1;
+            }
+            row_index += 1;
+        }
+        cofactor_matrix
     }
 }
