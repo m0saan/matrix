@@ -2,6 +2,10 @@
 name = "matrix"
 version = "0.1.0"
 edition = "2021"
+authors = ["m0sani <moboustt@student.1337.ma>"]
+description = "A mini linear algebra library implemented in Rust."
+license = "Apache-2.0"
+
 
 [dependencies]
 num = "0.4.3"
