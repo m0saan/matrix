@@ -233,21 +233,100 @@ fn ex08() {
 }
 
 fn ex09() {
-    println!("Running Exercise 9...");
+    println!("Running Exercise 9: Transpose");
+    let mut m = Matrix::from([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+    println!("{}", m.transpose());
+    // [[1., 4., 7.]
+    // [2., 5., 8.]
+    // [3., 6., 9.]]
+
+    let mut u = Matrix::from([[1., 0.], [0., 1.]]);
+    println!("{}", u.transpose());
+    // [[1., 0.]
+    // [0., 1.]]
+
+    let mut u = Matrix::from([[2., -5., 0.], [4., 3., 7.], [-2., 3., 4.]]);
+    println!("{}", u.transpose());
+    // [[2., 4., -2.]
+    // [-5., 3., 3.]
+    // [0., 7., 4.]]
 }
 
 fn ex10() {
-    println!("Running Exercise 10...");
+    println!("Running Exercise 10: Reduced Row Echelon Form...");
+    let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
+    println!("{}", u.row_echelon());
+    // [1.0, 0.0, 0.0]
+    // [0.0, 1.0, 0.0]
+    // [0.0, 0.0, 1.0]
+    let u = Matrix::from([[1., 2.], [3., 4.]]);
+    println!("{}", u.row_echelon());
+    // [1.0, 0.0]
+    // [0.0, 1.0]
+    let u = Matrix::from([[1., 2.], [2., 4.]]);
+    println!("{}", u.row_echelon());
+    // [1.0, 2.0]
+    // [0.0, 0.0]
+    let u = Matrix::from([
+        [8., 5., -2., 4., 28.],
+        [4., 2.5, 20., 4., -4.],
+        [8., 5., 1., 4., 17.],
+    ]);
+    println!("{}", u.row_echelon());
+    // [1.0, 0.625, 0.0, 0.0, -12.1666667]
+    // [0.0, 0.0, 1.0, 0.0, -3.6666667]
+    // [0.0, 0.0, 0.0, 1.0, 29.5 ]
 }
 
 fn ex11() {
-    println!("Running Exercise 11...");
+    println!("Running Exercise 11: Determinant...");
+    let u = Matrix::from([[1., -1.], [-1., 1.]]);
+    println!("{}", u.determinant());
+    // 0.0
+    let u = Matrix::from([[2., 0., 0.], [0., 2., 0.], [0., 0., 2.]]);
+    println!("{}", u.determinant());
+    // 8.0
+    let u = Matrix::from([[8., 5., -2.], [4., 7., 20.], [7., 6., 1.]]);
+    println!("{}", u.determinant());
+    // -174.0
+    let u = Matrix::from([
+        [8., 5., -2., 4.],
+        [4., 2.5, 20., 4.],
+        [8., 5., 1., 4.],
+        [28., -4., 17., 1.],
+    ]);
+    println!("{}", u.determinant());
+    // 1032
 }
 
 fn ex12() {
-    println!("Running Exercise 12...");
+    println!("Running Exercise 12: Inverse...");
+    let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
+    println!("{}", u.inverse().unwrap());
+    // [1.0, 0.0, 0.0]
+    // [0.0, 1.0, 0.0]
+    // [0.0, 0.0, 1.0]
+    let u = Matrix::from([[2., 0., 0.], [0., 2., 0.], [0., 0., 2.]]);
+    println!("{}", u.inverse().unwrap());
+    // [0.5, 0.0, 0.0]
+    // [0.0, 0.5, 0.0]
+    // [0.0, 0.0, 0.5]
+    let u = Matrix::from([[8., 5., -2.], [4., 7., 20.], [7., 6., 1.]]);
+    println!("{}", u.inverse().unwrap());
+    // [0.649425287, 0.097701149, -0.655172414]
+    // [-0.781609195, -0.126436782, 0.965517241]
+    // [0.143678161, 0.074712644, -0.20ss6896552]
 }
 
 fn ex13() {
-    println!("Running Exercise 13...");
+    println!("Running Exercise 13: Rank");
+    let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
+    println!("{}", u.rank());
+    // 3
+    let u = Matrix::from([[1., 2., 0., 0.], [2., 4., 0., 0.], [-1., 2., 1., 1.]]);
+    println!("{}", u.rank());
+    // 2
+    let u = Matrix::from([[8., 5., -2.], [4., 7., 20.], [7., 6., 1.], [21., 18., 7.]]);
+    println!("{}", u.rank());
+    // 3
 }
