@@ -732,7 +732,6 @@ where
             }
             row_index += 1;
         }
-        println!("{:?}", cofactor_matrix);
         cofactor_matrix
     }
 }
