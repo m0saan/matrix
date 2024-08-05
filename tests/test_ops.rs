@@ -1,5 +1,5 @@
 mod ops_tests {
-    use ::matrix::{angle_cos, cross_product, linear_combination, Vector};
+    use ::mini_matrix::{angle_cos, cross_product, linear_combination, Vector};
 
     #[test]
     fn test_linear_combination() {

@@ -5,7 +5,7 @@
 use num_complex::Complex;
 use std::env;
 
-use matrix::{angle_cos, cross_product, linear_combination, Matrix, Vector};
+use mini_matrix::{angle_cos, cross_product, linear_combination, Matrix, Vector};
 
 fn main() {
     // Collect command-line arguments into a vector

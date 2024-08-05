@@ -1,5 +1,5 @@
 [package]
-name = "matrix"
+name = "mini-matrix"
 version = "0.1.0"
 edition = "2021"
 authors = ["m0sani <moboustt@student.1337.ma>"]

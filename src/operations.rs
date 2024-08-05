@@ -28,7 +28,7 @@ use super::Vector;
 /// # Examples
 ///
 /// ```
-/// use matrix::{Vector, linear_combination};
+/// use mini_matrix::{Vector, linear_combination};
 ///
 /// let mut v1 = Vector::from([1.0, 2.0, 3.0]);
 /// let mut v2 = Vector::from([4.0, 5.0, 6.0]);

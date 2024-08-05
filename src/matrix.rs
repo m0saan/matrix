@@ -15,7 +15,7 @@ use crate::Vector;
 /// # Examples
 ///
 /// ```
-/// use matrix::Matrix;
+/// use mini_matrix::Matrix;
 ///
 /// let matrix = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
 /// assert_eq!(matrix.size(), (2, 2));
@@ -35,7 +35,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
     /// ```
@@ -48,7 +48,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let matrix = Matrix::<f64, 3, 4>::zero();
     /// assert_eq!(matrix.size(), (3, 4));
@@ -62,7 +62,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let matrix = Matrix::<f64, 2, 2>::zero();
     /// assert_eq!(matrix.store, [[0.0, 0.0], [0.0, 0.0]]);
@@ -107,7 +107,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -127,7 +127,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
     /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
@@ -147,7 +147,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// a.scl(2);
@@ -172,7 +172,7 @@ impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// matrix[(0, 1)] = 5;
@@ -195,7 +195,7 @@ impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// assert_eq!(matrix[(1, 0)], 3);
@@ -217,7 +217,7 @@ impl<T, const M: usize, const N: usize> Deref for Matrix<T, M, N> {
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// // Usage example will be available once implementation is complete
@@ -237,7 +237,7 @@ impl<T, const M: usize, const N: usize> DerefMut for Matrix<T, M, N> {
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// // Usage example will be available once implementation is complete
@@ -258,7 +258,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -287,7 +287,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
     /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
@@ -316,7 +316,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = a * 2;
@@ -344,7 +344,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::{Matrix, Vector};
+    /// use mini_matrix::{Matrix, Vector};
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let v = Vector::<i32, 2>::from([5, 6]);
@@ -373,7 +373,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -404,7 +404,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, -2], [-3, 4]]);
     /// let b = -a;
@@ -433,7 +433,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<f32, 2, 2>::from([[1.0, 2.5], [3.7, 4.2]]);
     /// println!("{}", a);
@@ -516,7 +516,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.trace(), 15);
@@ -544,7 +544,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
     /// let b = a.transpose();
@@ -573,7 +573,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::identity();
     /// assert_eq!(a.store, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
@@ -600,7 +600,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<f64, 3, 4>::from([
     ///     [1.0, 2.0, 3.0, 4.0],
@@ -687,7 +687,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.determinant(), 0);
@@ -755,7 +755,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
     /// let inv = a.inverse().unwrap();
@@ -804,7 +804,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use matrix::Matrix;
+    /// use mini_matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.rank(), 2);

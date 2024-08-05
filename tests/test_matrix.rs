@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod matrix_tests {
-    use matrix::{Matrix, Vector};
+    use mini_matrix::{Matrix, Vector};
 
     #[test]
     fn test_from() {
