@@ -1,3 +1,14 @@
+/// A generic matrix type with `M` rows and `N` columns.
+///
+/// # Examples
+///
+/// ```
+/// use your_crate::Matrix;
+///
+/// let matrix = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
+/// assert_eq!(matrix.size(), (2, 2));
+/// ```
+
 use num::{Float, Num};
 use std::fmt::{Debug, Display};
 
@@ -8,6 +19,7 @@ use crate::Vector;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix<T, const M: usize, const N: usize> {
+    /// The underlying storage for the matrix elements.
     pub store: [[T; N]; M],
 }
 
@@ -15,14 +27,43 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default,
 {
+    /// Creates a new `Matrix` from the given 2D array.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let matrix = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
+    /// ```
     pub fn from(data: [[T; N]; M]) -> Self {
         Self { store: data }
     }
 
+    /// Returns the dimensions of the matrix as a tuple `(rows, columns)`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let matrix = Matrix::<f64, 3, 4>::zero();
+    /// assert_eq!(matrix.size(), (3, 4));
+    /// ```
     pub const fn size(&self) -> (usize, usize) {
         (M, N)
     }
 
+    /// Creates a new `Matrix` with all elements set to the default value of type `T`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let matrix = Matrix::<f64, 2, 2>::zero();
+    /// assert_eq!(matrix.store, [[0.0, 0.0], [0.0, 0.0]]);
+    /// ```
     pub fn zero() -> Self {
         Self {
             store: [[T::default(); N]; M],
@@ -58,6 +99,19 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: AddAssign + SubAssign + MulAssign + Copy + Default,
 {
+
+    /// Adds another matrix to this matrix in-place.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
+    /// a.add(&b);
+    /// assert_eq!(a.store, [[6, 8], [10, 12]]);
+    /// ```
     pub fn add(&mut self, other: &Self) {
         for (l_row, r_row) in self.store.iter_mut().zip(other.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
@@ -66,6 +120,18 @@ where
         }
     }
 
+    /// Subtracts another matrix from this matrix in-place.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
+    /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// a.sub(&b);
+    /// assert_eq!(a.store, [[4, 4], [4, 4]]);
+    /// ```
     pub fn sub(&mut self, other: &Self) {
         for (l_row, r_row) in self.store.iter_mut().zip(other.store.iter()) {
             for (l, r) in l_row.iter_mut().zip(r_row.iter()) {
@@ -73,6 +139,18 @@ where
             }
         }
     }
+
+    /// Multiplies this matrix by a scalar value in-place.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// a.scl(2);
+    /// assert_eq!(a.store, [[2, 4], [6, 8]]);
+    /// ```
     pub fn scl(&mut self, scalar: T) {
         for row in self.store.iter_mut() {
             for elem in row.iter_mut() {
@@ -81,7 +159,24 @@ where
         }
     }
 }
+
+
 impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M, N> {
+    /// Mutably indexes into the matrix, allowing modification of its elements.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - A tuple `(row, column)` specifying the element to access.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// matrix[(0, 1)] = 5;
+    /// assert_eq!(matrix.store, [[1, 5], [3, 4]]);
+    /// ```
     fn index_mut(&mut self, index: (usize, usize)) -> &mut T {
         &mut self.store[index.0][index.1]
     }
@@ -90,6 +185,20 @@ impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M
 impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N> {
     type Output = T;
 
+    /// Immutably indexes into the matrix, allowing read access to its elements.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - A tuple `(row, column)` specifying the element to access.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// assert_eq!(matrix[(1, 0)], 3);
+    /// ```
     fn index(&self, index: (usize, usize)) -> &Self::Output {
         &self.store.index(index.0).index(index.1)
     }
@@ -98,12 +207,40 @@ impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N
 impl<T, const M: usize, const N: usize> Deref for Matrix<T, M, N> {
     type Target = [T; N];
 
+    /// Dereferences the matrix, allowing it to be treated as a slice.
+    ///
+    /// # Note
+    ///
+    /// This implementation is currently unfinished.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// // Usage example will be available once implementation is complete
+    /// ```
     fn deref(&self) -> &Self::Target {
         todo!()
     }
 }
 
 impl<T, const M: usize, const N: usize> DerefMut for Matrix<T, M, N> {
+    /// Mutably dereferences the matrix, allowing it to be treated as a mutable slice.
+    ///
+    /// # Note
+    ///
+    /// This implementation is currently unfinished.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// // Usage example will be available once implementation is complete
+    /// ```
     fn deref_mut(&mut self) -> &mut Self::Target {
         todo!()
     }
@@ -115,6 +252,18 @@ where
 {
     type Output = Self;
 
+    /// Adds two matrices element-wise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
+    /// let c = a + b;
+    /// assert_eq!(c.store, [[6, 8], [10, 12]]);
+    /// ```
     fn add(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
         for (l_row, r_row) in result.store.iter_mut().zip(rhs.store.iter()) {
@@ -132,6 +281,18 @@ where
 {
     type Output = Self;
 
+    /// Subtracts one matrix from another element-wise.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
+    /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let c = a - b;
+    /// assert_eq!(c.store, [[4, 4], [4, 4]]);
+    /// ```
     fn sub(self, rhs: Self) -> Self::Output {
         let mut result = self.clone();
         for (l_row, r_row) in result.store.iter_mut().zip(rhs.store.iter()) {
@@ -149,6 +310,17 @@ where
 {
     type Output = Self;
 
+    /// Multiplies a matrix by a scalar value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let b = a * 2;
+    /// assert_eq!(b.store, [[2, 4], [6, 8]]);
+    /// ```
     fn mul(self, rhs: T) -> Self::Output {
         let mut result = self.clone();
         for row in result.store.iter_mut() {
@@ -166,6 +338,18 @@ where
 {
     type Output = Vector<T, M>;
 
+    /// Multiplies a matrix by a vector.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::{Matrix, Vector};
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let v = Vector::<i32, 2>::from([5, 6]);
+    /// let result = a * v;
+    /// assert_eq!(result.store, [17, 39]);
+    /// ```
     fn mul(self, rhs: Vector<T, N>) -> Self::Output {
         let mut result = Vector::zero();
         for (idx, row) in self.store.iter().enumerate() {
@@ -183,6 +367,18 @@ where
 {
     type Output = Self;
 
+    /// Multiplies two matrices.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
+    /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
+    /// let c = a * b;
+    /// assert_eq!(c.store, [[19, 22], [43, 50]]);
+    /// ```
     fn mul(self, rhs: Matrix<T, N, N>) -> Self::Output {
         let mut result = Matrix::zero();
         for (i, row) in self.store.iter().enumerate() {
@@ -202,6 +398,17 @@ where
 {
     type Output = Self;
 
+    /// Negates all elements of the matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 2, 2>::from([[1, -2], [-3, 4]]);
+    /// let b = -a;
+    /// assert_eq!(b.store, [[-1, 2], [3, -4]]);
+    /// ````
     fn neg(self) -> Self::Output {
         let mut result = self.clone();
         for row in result.store.iter_mut() {
@@ -217,6 +424,23 @@ impl<T, const M: usize, const N: usize> Display for Matrix<T, M, N>
 where
     T: AddAssign + SubAssign + MulAssign + Copy + std::fmt::Display,
 {
+
+    /// Formats the matrix for display.
+    ///
+    /// Each row of the matrix is displayed on a new line, with elements separated by commas.
+    /// Elements are formatted with one decimal place precision.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<f32, 2, 2>::from([[1.0, 2.5], [3.7, 4.2]]);
+    /// println!("{}", a);
+    /// // Output:
+    /// // // [1.0, 2.5]
+    /// // // [3.7, 4.2]
+    /// ```
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         for (i, row) in self.store.iter().enumerate() {
             if i > 0 {
@@ -281,6 +505,22 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Num + Copy + AddAssign + Default,
 {
+    /// Calculates the trace of the matrix.
+    ///
+    /// The trace is defined as the sum of the elements on the main diagonal.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the matrix is not square (i.e., if M != N).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    /// assert_eq!(a.trace(), 15);
+    /// ```
     pub fn trace(&mut self) -> T {
         assert!(M == N, "Matrix must be square to calculate trace");
 
@@ -299,6 +539,17 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default,
 {
+    /// Computes the transpose of the matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let mut a = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
+    /// let b = a.transpose();
+    /// assert_eq!(b.store, [[1, 4], [2, 5], [3, 6]]);
+    /// ```
     pub fn transpose(&mut self) -> Matrix<T, M, N> {
         let mut result = Matrix::zero();
         for i in 0..M {
@@ -317,6 +568,16 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default,
 {
+    /// Creates an identity matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 3, 3>::identity();
+    /// assert_eq!(a.store, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+    /// ```
     pub fn identity() -> Matrix<T, M, N> {
         let mut result = Matrix::zero();
         for i in 0..M {
@@ -334,6 +595,21 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul<Output = T> + PartialEq + Num + Div<Output = T> + Sub<Output = T>,
 {
+    /// Computes the row echelon form of the matrix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<f64, 3, 4>::from([
+    ///     [1.0, 2.0, 3.0, 4.0],
+    ///     [5.0, 6.0, 7.0, 8.0],
+    ///     [9.0, 10.0, 11.0, 12.0]
+    /// ]);
+    /// let b = a.row_echelon();
+    /// // Check the result (approximate due to floating-point arithmetic)
+    /// ```
     pub fn row_echelon(&self) -> Matrix<T, M, N> {
         let mut result = self.clone();
         let mut pivot = 0;
@@ -400,6 +676,22 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug,
 {
+    /// Calculates the determinant of the matrix.
+    ///
+    /// This method supports matrices up to 4x4 in size.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the matrix is larger than 4x4.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    /// assert_eq!(a.determinant(), 0);
+    /// ```
     pub fn determinant(&self) -> T {
         match M {
             1 => self[(0, 0)],
@@ -453,6 +745,23 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug + Float,
 {
+    /// Calculates the inverse of the matrix.
+    ///
+    /// This method supports matrices up to 3x3 in size.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(Matrix)` if the inverse exists, or an `Err` with a descriptive message if not.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
+    /// let inv = a.inverse().unwrap();
+    /// // Check the result (approximate due to floating-point arithmetic)
+    /// ```
     pub fn inverse(&self) -> Result<Matrix<T, M, N>, &'static str> {
         if M != N {
             return Err("Matrix must be square to calculate inverse");
@@ -489,6 +798,18 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + PartialEq,
 {
+    /// Calculates the rank of the matrix.
+    ///
+    /// The rank is determined by computing the row echelon form and counting non-zero rows.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use your_crate::Matrix;
+    ///
+    /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    /// assert_eq!(a.rank(), 2);
+    /// ```
     pub fn rank(&self) -> usize {
         let mut rank = M;
         let row_echelon = self.row_echelon();
