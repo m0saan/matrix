@@ -1,3 +1,7 @@
+//! # matrix
+//!
+//! A mini linear algebra library implemented in Rust.
+//!
 use num::Float;
 use std::iter::Sum;
 use std::ops::{Add, Mul};

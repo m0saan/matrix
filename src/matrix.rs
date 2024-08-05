@@ -1,3 +1,16 @@
+//! # matrix
+//!
+//! A mini linear algebra library implemented in Rust.
+
+
+use num::{Float, Num};
+use std::fmt::{Debug, Display};
+
+use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::ops::{Deref, DerefMut, Index, IndexMut};
+
+use crate::Vector;
+
 /// A generic matrix type with `M` rows and `N` columns.
 ///
 /// # Examples
@@ -8,15 +21,6 @@
 /// let matrix = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
 /// assert_eq!(matrix.size(), (2, 2));
 /// ```
-
-use num::{Float, Num};
-use std::fmt::{Debug, Display};
-
-use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
-use std::ops::{Deref, DerefMut, Index, IndexMut};
-
-use crate::Vector;
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Matrix<T, const M: usize, const N: usize> {
     /// The underlying storage for the matrix elements.
