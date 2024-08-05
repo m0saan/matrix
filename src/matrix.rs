@@ -2,7 +2,6 @@
 //!
 //! A mini linear algebra library implemented in Rust.
 
-
 use num::{Float, Num};
 use std::fmt::{Debug, Display};
 
@@ -16,7 +15,7 @@ use crate::Vector;
 /// # Examples
 ///
 /// ```
-/// use your_crate::Matrix;
+/// use matrix::Matrix;
 ///
 /// let matrix = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
 /// assert_eq!(matrix.size(), (2, 2));
@@ -36,7 +35,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
     /// ```
@@ -49,7 +48,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let matrix = Matrix::<f64, 3, 4>::zero();
     /// assert_eq!(matrix.size(), (3, 4));
@@ -63,7 +62,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let matrix = Matrix::<f64, 2, 2>::zero();
     /// assert_eq!(matrix.store, [[0.0, 0.0], [0.0, 0.0]]);
@@ -103,13 +102,12 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: AddAssign + SubAssign + MulAssign + Copy + Default,
 {
-
     /// Adds another matrix to this matrix in-place.
     ///
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -129,7 +127,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
     /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
@@ -149,7 +147,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// a.scl(2);
@@ -164,7 +162,6 @@ where
     }
 }
 
-
 impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M, N> {
     /// Mutably indexes into the matrix, allowing modification of its elements.
     ///
@@ -175,7 +172,7 @@ impl<T, const M: usize, const N: usize> IndexMut<(usize, usize)> for Matrix<T, M
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// matrix[(0, 1)] = 5;
@@ -198,7 +195,7 @@ impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// assert_eq!(matrix[(1, 0)], 3);
@@ -220,7 +217,7 @@ impl<T, const M: usize, const N: usize> Deref for Matrix<T, M, N> {
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// // Usage example will be available once implementation is complete
@@ -240,7 +237,7 @@ impl<T, const M: usize, const N: usize> DerefMut for Matrix<T, M, N> {
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut matrix = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// // Usage example will be available once implementation is complete
@@ -261,7 +258,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -290,7 +287,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
     /// let b = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
@@ -319,7 +316,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = a * 2;
@@ -347,7 +344,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::{Matrix, Vector};
+    /// use matrix::{Matrix, Vector};
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let v = Vector::<i32, 2>::from([5, 6]);
@@ -376,7 +373,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
@@ -407,7 +404,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 2, 2>::from([[1, -2], [-3, 4]]);
     /// let b = -a;
@@ -428,7 +425,6 @@ impl<T, const M: usize, const N: usize> Display for Matrix<T, M, N>
 where
     T: AddAssign + SubAssign + MulAssign + Copy + std::fmt::Display,
 {
-
     /// Formats the matrix for display.
     ///
     /// Each row of the matrix is displayed on a new line, with elements separated by commas.
@@ -437,7 +433,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<f32, 2, 2>::from([[1.0, 2.5], [3.7, 4.2]]);
     /// println!("{}", a);
@@ -475,7 +471,7 @@ where
     ///
     /// # Returns
     /// The resulting vector of the multiplication.
-    pub fn mul_vec(&mut self, vec: Vector<T, N>) -> Vector<T, N> {
+    pub fn mul_vec(&mut self, vec: &Vector<T, N>) -> Vector<T, N> {
         let mut result = Vector::zero();
         for (idx, row) in self.store.iter_mut().enumerate() {
             for (e1, e2) in row.iter_mut().zip(vec.store.iter()) {
@@ -492,7 +488,7 @@ where
     ///
     /// # Returns
     /// The resulting matrix of the multiplication.
-    pub fn mul_mat(&mut self, mat: Matrix<T, M, N>) -> Matrix<T, M, N> {
+    pub fn mul_mat(&mut self, mat: &Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut result = Matrix::zero();
         for i in 0..M {
             for j in 0..N {
@@ -520,12 +516,12 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.trace(), 15);
     /// ```
-    pub fn trace(&mut self) -> T {
+    pub fn trace(&self) -> T {
         assert!(M == N, "Matrix must be square to calculate trace");
 
         let mut result = T::default();
@@ -548,7 +544,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let mut a = Matrix::<i32, 2, 3>::from([[1, 2, 3], [4, 5, 6]]);
     /// let b = a.transpose();
@@ -577,7 +573,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::identity();
     /// assert_eq!(a.store, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
@@ -604,7 +600,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<f64, 3, 4>::from([
     ///     [1.0, 2.0, 3.0, 4.0],
@@ -691,7 +687,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.determinant(), 0);
@@ -760,7 +756,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<f64, 2, 2>::from([[1.0, 2.0], [3.0, 4.0]]);
     /// let inv = a.inverse().unwrap();
@@ -809,7 +805,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// use your_crate::Matrix;
+    /// use matrix::Matrix;
     ///
     /// let a = Matrix::<i32, 3, 3>::from([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
     /// assert_eq!(a.rank(), 2);
