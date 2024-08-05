@@ -53,6 +53,17 @@ impl<T, const N: usize> DerefMut for Vector<T, N> {
     }
 }
 
+impl<T, const N: usize> PartialEq for Vector<T, N>
+where
+    T: PartialEq,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.store == other.store
+    }
+}
+
+impl<T, const N: usize> Eq for Vector<T, N> where T: Eq {}
+
 impl<T, const N: usize> Vector<T, N>
 where
     T: Copy + Default,
@@ -105,7 +116,7 @@ where
 
 impl<T, const N: usize> Vector<T, N>
 where
-    T: Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Copy + Clone + Default + PartialOrd,
+    T: Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Copy + Clone + Default,
 {
     /// Adds another vector to this vector in-place.
     ///
@@ -182,9 +193,9 @@ where
     ///
     /// let v1 = Vector::from([1, 2, 3]);
     /// let v2 = Vector::from([4, 5, 6]);
-    /// assert_eq!(v1.dot(v2), 32); // 1*4 + 2*5 + 3*6 = 32
+    /// assert_eq!(v1.dot(&v2), 32); // 1*4 + 2*5 + 3*6 = 32
     /// ```
-    pub fn dot(&self, v: Self) -> T {
+    pub fn dot(&self, v: &Self) -> T {
         self.store
             .iter()
             .zip(v.store.iter())
@@ -398,7 +409,7 @@ where
 /* *************** */
 impl<T, const N: usize> Vector<T, N>
 where
-    T: Float + Sum,
+    T: Float + Sum<T>,
 {
     /// Calculates the L1 norm (Manhattan norm) of the vector.
     ///
