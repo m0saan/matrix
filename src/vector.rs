@@ -2,7 +2,6 @@
 //!
 //! A mini linear algebra library implemented in Rust.
 
-
 use num::{Float, Num, Signed};
 use std::fmt::Display;
 use std::iter::Sum;
