@@ -1,8 +1,3 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
-#![allow(unused_imports)]
-
-use num_complex::Complex;
 use std::env;
 
 use mini_matrix::{angle_cos, cross_product, lerp, linear_combination, Matrix, Vector};
