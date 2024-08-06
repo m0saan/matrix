@@ -1,4 +1,4 @@
-//! # matrix
+//! # mini_matrix
 //!
 //! A mini linear algebra library implemented in Rust.
 //!
@@ -72,6 +72,52 @@ where
     }
     result
 }
+
+/// Computes the linear interpolation between two vectors.
+///
+/// Linear interpolation (lerp) finds a point that is between two vectors, based on a given parameter `t`.
+/// It computes a weighted average of the vectors where `t` determines the weight of the second vector.
+///
+/// # Arguments
+///
+/// * `u` - The starting vector.
+/// * `v` - The ending vector.
+/// * `t` - A scalar parameter between 0.0 and 1.0 that determines the interpolation point.
+///         If `t` is 0.0, the result is `u`. If `t` is 1.0, the result is `v`.
+///         For values between 0.0 and 1.0, the result is a point between `u` and `v`.
+///
+/// # Returns
+///
+/// A new vector that represents the interpolated result between `u` and `v`.
+///
+/// # Examples
+///
+/// ```
+/// use mini_matrix::{Vector, lerp};
+///
+/// let u = Vector::from([1.0, 2.0, 3.0]);
+/// let v = Vector::from([4.0, 5.0, 6.0]);
+///
+/// let result = lerp(u, v, 0.5);
+/// assert_eq!(result, Vector::from([2.5, 3.5, 4.5]));
+/// ```
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The type `V` does not implement the required traits (`Add`, `Mul`).
+///
+/// # Notes
+///
+/// - This function assumes `t` is a floating-point number (`f32`) and works with vectors where the `Add`
+///   and `Mul` traits are implemented.
+pub fn lerp<V>(u: V, v: V, t: f32) -> V
+where
+    V: Add<V, Output = V> + Mul<f32, Output = V>,
+{
+    u * (1.0 - t) + v * t
+}
+
 
 /* *********************** */
 /*      Cosine Angle       */
