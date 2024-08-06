@@ -22,6 +22,8 @@ It provides functionalities to perform various exercises related to vectors and 
 
 ## Usage
 
+The crate is currently on [version 0.1.1](https://crates.io/crates/mini_matrix).
+
 The `main` function allows you to run different exercises based on a command-line argument specifying the exercise number.
 
 ### Running Exercises
@@ -30,9 +32,7 @@ To run a specific exercise, use the following command:
 
 ```bash
 cargo run <exercise_number>
-
-
-The crate is currently on [version 0.1.0](https://crates.io/crates/mini_matrix).
+```
 
 ---
 
@@ -59,7 +59,7 @@ The library is most easily used with [cargo](http://doc.crates.io/guide.html). S
 
 ```toml
 [dependencies]
-mini_matrix = "0.1.0"
+mini_matrix = "0.1.1"
 
 ```
 or use the following command:
@@ -82,21 +82,20 @@ use mini_matrix::Matrix;
 
 // Create a 2x2 matrix:
 let a = Matrix::from([
-    1.0, 2.0,
-    3.0, 4.0,
+    [1.0, 2.0],
+    [3.0, 4.0],
 ]);
 
 // Create a 2x3 matrix:
-let b = Matrix::([
-    1.0, 2.0, 3.0,
-    4.0, 5.0, 6.0,
+let b = Matrix::from([
+    [1.0, 2.0],
+    [4.0, 5.0],
 ]);
 
 let c = a * b; // Matrix product of a and b
 
 // Construct the product of `a` and `b` using the `matrix!` macro:
-let expected = matrix![9.0, 12.0, 15.0;
-                       19.0, 26.0, 33.0];
+let expected = Matrix::from([[5.0, 14.0], [11.0, 32.0]]);
 
 assert_eq!(c, expected);
 ```
