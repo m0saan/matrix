@@ -298,13 +298,10 @@ where
     }
 }
 
-// Implement the Mul trait for Vector<T, N> with f32
-impl<T, const N: usize> Mul<f32> for Vector<T, N>
-where
-    T: Mul<f32, Output = T> + Clone,
-{
+
+impl<T, const N:usize> Mul<T> for Vector<T, N> where T: Mul + Num + Copy{
     type Output = Self;
-    /// Multiplies a vector by a scalar (f32).
+    /// Multiplies a vector by a scalar.
     ///
     /// # Examples
     ///
@@ -315,7 +312,7 @@ where
     /// let v2 = v1 * 2.0;
     /// assert_eq!(v2, Vector::from([2.0, 4.0, 6.0]));
     /// ```
-    fn mul(self, scalar: f32) -> Self::Output {
+    fn mul(self, scalar: T) -> Self::Output {
         let mut result = self.clone();
         for element in result.store.iter_mut() {
             *element = element.clone() * scalar;
