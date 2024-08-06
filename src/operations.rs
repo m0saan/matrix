@@ -2,9 +2,9 @@
 //!
 //! A mini linear algebra library implemented in Rust.
 //!
-use num::Float;
+use num::{Float, Num};
 use std::iter::Sum;
-use std::ops::{Add, Mul};
+use std::ops::{Add, Mul, AddAssign};
 
 use super::Vector;
 
@@ -47,12 +47,11 @@ use super::Vector;
 // O(n)
 
 pub fn linear_combination<T, const N: usize>(
-    vectors: &mut [Vector<T, N>],
+    vectors: & [Vector<T, N>],
     scalars: &[T],
 ) -> Vector<T, N>
 where
-    T: Add<Output = T> + Mul<Output = T> + Copy + Clone + Default + PartialOrd,
-    Vector<T, N>: Mul<T>,
+    T: Num + Copy + Clone + Default + PartialOrd + AddAssign + Mul<T>,
 {
     assert_eq!(
         vectors.len(),
@@ -65,10 +64,8 @@ where
     }
 
     let mut result = Vector::zero();
-    for (vector, scalar) in vectors.iter_mut().zip(scalars.iter()) {
-        for (result_elem, vector_elem) in result.store.iter_mut().zip(vector.store.iter()) {
-            *result_elem = *result_elem + *vector_elem * *scalar;
-        }
+    for (v, s) in vectors.iter().zip(scalars.iter()) {
+        result += *v * *s;
     }
     result
 }
