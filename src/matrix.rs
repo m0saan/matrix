@@ -1,4 +1,4 @@
-//! # matrix
+//! # mini_matrix
 //!
 //! A mini linear algebra library implemented in Rust.
 
@@ -566,7 +566,7 @@ where
 /* ********************************************** */
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default + Num
+    T: Copy + Default + Num,
 {
     /// Creates an identity matrix.
     ///

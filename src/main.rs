@@ -5,7 +5,7 @@
 use num_complex::Complex;
 use std::env;
 
-use mini_matrix::{angle_cos, cross_product, linear_combination, Matrix, Vector};
+use mini_matrix::{angle_cos, cross_product, lerp, linear_combination, Matrix, Vector};
 
 fn main() {
     // Collect command-line arguments into a vector
@@ -110,6 +110,33 @@ fn ex02() {
 }
 
 fn ex03() {
+    println!("{}", lerp(0., 1., 0.));
+    // 0.0
+    println!("{}", lerp(0., 1., 1.));
+    // 1.0
+    println!("{}", lerp(0., 1., 0.5));
+    // 0.5
+    println!("{}", lerp(21., 42., 0.3));
+    // 27.3
+    println!(
+        "{}",
+        lerp(Vector::from([2., 1.]), Vector::from([4., 2.]), 0.3)
+    );
+    // [2.6]
+    // [1.3]
+    println!(
+        "{}",
+        lerp(
+            Matrix::from([[2., 1.], [3., 4.]]),
+            Matrix::from([[20., 10.], [30., 40.]]),
+            0.5
+        )
+    );
+    // [[11., 5.5]
+    // [16.5, 22.]]
+}
+
+fn ex04() {
     println!("Running Exercise 3: Dot Product...");
     let u = Vector::from([0., 0.]);
     let v = Vector::from([1., 1.]);
@@ -125,7 +152,7 @@ fn ex03() {
     // 9.0
 }
 
-fn ex04() {
+fn ex05() {
     println!("Running Exercise 4: Norms...");
     let u = Vector::from([0., 0., 0.]);
     println!("{}, {}, {}", u.norm_1(), u.norm(), u.norm_inf());
@@ -138,7 +165,7 @@ fn ex04() {
     // 3.0, 2.236067977, 2.0
 }
 
-fn ex05() {
+fn ex06() {
     println!("Running Exercise 5: Angle Cos...");
     let u = Vector::from([1., 0.]);
     let v = Vector::from([1., 0.]);
@@ -162,7 +189,7 @@ fn ex05() {
     // 0.974631846
 }
 
-fn ex06() {
+fn ex07() {
     println!("Running Exercise 6: Cross Product...");
     let u = Vector::from([0., 0., 1.]);
     let v = Vector::from([1., 0., 0.]);
@@ -184,7 +211,7 @@ fn ex06() {
     // [-16.]
 }
 
-fn ex07() {
+fn ex08() {
     println!("Running Exercise 7: Matrix Multiplication...");
     let mut u = Matrix::from([[1., 0.], [0., 1.]]);
     let v = Vector::from([4., 2.]);
@@ -219,7 +246,7 @@ fn ex07() {
     // [44., 22.]
 }
 
-fn ex08() {
+fn ex09() {
     println!("Running Exercise 8: Trace");
     let u = Matrix::from([[1., 0.], [0., 1.]]);
     println!("{}", u.trace());
@@ -232,7 +259,7 @@ fn ex08() {
     // -21.0
 }
 
-fn ex09() {
+fn ex10() {
     println!("Running Exercise 9: Transpose");
     let mut m = Matrix::from([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
     println!("{}", m.transpose());
@@ -252,7 +279,7 @@ fn ex09() {
     // [0., 7., 4.]]
 }
 
-fn ex10() {
+fn ex11() {
     println!("Running Exercise 10: Reduced Row Echelon Form...");
     let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
     println!("{}", u.row_echelon());
@@ -278,7 +305,7 @@ fn ex10() {
     // [0.0, 0.0, 0.0, 1.0, 29.5 ]
 }
 
-fn ex11() {
+fn ex12() {
     println!("Running Exercise 11: Determinant...");
     let u = Matrix::from([[1., -1.], [-1., 1.]]);
     println!("{}", u.determinant());
@@ -299,7 +326,7 @@ fn ex11() {
     // 1032
 }
 
-fn ex12() {
+fn ex13() {
     println!("Running Exercise 12: Inverse...");
     let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
     println!("{}", u.inverse().unwrap());
@@ -318,7 +345,7 @@ fn ex12() {
     // [0.143678161, 0.074712644, -0.20ss6896552]
 }
 
-fn ex13() {
+fn ex14() {
     println!("Running Exercise 13: Rank");
     let u = Matrix::from([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
     println!("{}", u.rank());

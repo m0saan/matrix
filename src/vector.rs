@@ -1,4 +1,4 @@
-//! # matrix
+//! # mini_matrix
 //!
 //! A mini linear algebra library implemented in Rust.
 
