@@ -378,7 +378,7 @@ where
     /// let a = Matrix::<i32, 2, 2>::from([[1, 2], [3, 4]]);
     /// let b = Matrix::<i32, 2, 2>::from([[5, 6], [7, 8]]);
     /// let c = a * b;
-    /// assert_eq!(c.store, [[19, 22], [43, 50]]);
+    /// assert_eq!(c.store, [[17, 23], [39, 53]]);
     /// ```
     fn mul(self, rhs: Matrix<T, N, N>) -> Self::Output {
         let mut result = Matrix::zero();
@@ -550,7 +550,7 @@ where
     /// let b = a.transpose();
     /// assert_eq!(b.store, [[1, 4], [2, 5], [3, 6]]);
     /// ```
-    pub fn transpose(&mut self) -> Matrix<T, M, N> {
+    pub fn transpose(&mut self) -> Matrix<T, N, M> {
         let mut result = Matrix::zero();
         for i in 0..M {
             for j in 0..N {
@@ -566,7 +566,7 @@ where
 /* ********************************************** */
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
-    T: Copy + Default,
+    T: Copy + Default + Num
 {
     /// Creates an identity matrix.
     ///
@@ -581,7 +581,7 @@ where
     pub fn identity() -> Matrix<T, M, N> {
         let mut result = Matrix::zero();
         for i in 0..M {
-            result[(i, i)] = T::default();
+            result[(i, i)] = T::one();
         }
         result
     }
@@ -761,7 +761,7 @@ where
     /// let inv = a.inverse().unwrap();
     /// // Check the result (approximate due to floating-point arithmetic)
     /// ```
-    pub fn inverse(&self) -> Result<Matrix<T, M, N>, &'static str> {
+    pub fn inverse(&self) -> Result<Self, &'static str> {
         if M != N {
             return Err("Matrix must be square to calculate inverse");
         }
@@ -772,7 +772,7 @@ where
             return Err("Matrix is singular and has no inverse");
         }
 
-        let mut inv = Matrix::<T, M, N>::zero();
+        let mut inv = Matrix::<T, N, M>::zero();
         for i in 0..M {
             for j in 0..N {
                 let coffactor = match M {
