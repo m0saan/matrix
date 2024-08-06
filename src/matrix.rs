@@ -206,7 +206,7 @@ impl<T, const M: usize, const N: usize> Index<(usize, usize)> for Matrix<T, M, N
 }
 
 impl<T, const M: usize, const N: usize> Deref for Matrix<T, M, N> {
-    type Target = [T; N];
+    type Target = [[T; N]; M];
 
     /// Dereferences the matrix, allowing it to be treated as a slice.
     ///
@@ -223,7 +223,7 @@ impl<T, const M: usize, const N: usize> Deref for Matrix<T, M, N> {
     /// // Usage example will be available once implementation is complete
     /// ```
     fn deref(&self) -> &Self::Target {
-        todo!()
+        &self.store
     }
 }
 
@@ -243,7 +243,7 @@ impl<T, const M: usize, const N: usize> DerefMut for Matrix<T, M, N> {
     /// // Usage example will be available once implementation is complete
     /// ```
     fn deref_mut(&mut self) -> &mut Self::Target {
-        todo!()
+        &mut self.store
     }
 }
 
