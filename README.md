@@ -94,7 +94,6 @@ let b = Matrix::from([
 
 let c = a * b; // Matrix product of a and b
 
-// Construct the product of `a` and `b` using the `matrix!` macro:
 let expected = Matrix::from([[5.0, 14.0], [11.0, 32.0]]);
 
 assert_eq!(c, expected);
