@@ -36,8 +36,9 @@ fn main() {
         11 => ex11(),
         12 => ex12(),
         13 => ex13(),
+        14 => ex14(),
         _ => {
-            eprintln!("Error: Exercise number must be between 1 and 13.");
+            eprintln!("Error: Exercise number must be between 1 and 14.");
             std::process::exit(1);
         }
     }

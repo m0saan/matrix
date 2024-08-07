@@ -595,7 +595,105 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul<Output = T> + PartialEq + Num + Div<Output = T> + Sub<Output = T>,
 {
-    /// Computes the row echelon form of the matrix.
+    /// Converts a given matrix to its Reduced Row-Echelon Form (RREF).
+    ///
+    /// Row-echelon form is a specific form of a matrix that is particularly useful for solving
+    /// systems of linear equations and for understanding the properties of the matrix. To explain
+    /// it simply and in detail, let's go through what row-echelon form is, how to achieve it, and
+    /// an example to illustrate the process.
+    ///
+    /// # Row-Echelon Form
+    ///
+    /// A matrix is in row-echelon form if it satisfies the following conditions:
+    ///
+    /// 1. **Leading Entry**: The leading entry (first non-zero number from the left) in each row is 1.
+    ///    This is called the pivot.
+    /// 2. **Zeros Below**: The pivot in each row is to the right of the pivot in the row above, and
+    ///    all entries below a pivot are zeros.
+    /// 3. **Rows of Zeros**: Any rows consisting entirely of zeros are at the bottom of the matrix.
+    ///
+    /// # Reduced Row-Echelon Form
+    ///
+    /// A matrix is in reduced row-echelon form (RREF) if it additionally satisfies:
+    ///
+    /// 4. **Leading Entries**: Each leading 1 is the only non-zero entry in its column.
+    ///
+    /// # Achieving Row-Echelon Form
+    ///
+    /// To convert a matrix into row-echelon form, we use a process called Gaussian elimination.
+    /// This involves performing row operations:
+    ///
+    /// 1. **Row swapping**: Swapping the positions of two rows.
+    /// 2. **Row multiplication**: Multiplying all entries of a row by a non-zero scalar.
+    /// 3. **Row addition**: Adding or subtracting the multiples of one row to another row.
+    ///
+    ///
+    /// Let's consider an example with a `3 x 3` matrix:
+    ///
+    ///
+    /// A = [
+    ///   [1, 2, 3],
+    ///   [4, 5, 6],
+    ///   [7, 8, 9]
+    /// ]
+    ///
+    /// ## Step-by-Step Process
+    ///
+    /// 1. **Starting Matrix**:
+    ///
+    ///    [
+    ///      [1, 2, 3],
+    ///      [4, 5, 6],
+    ///      [7, 8, 9]
+    ///    ]
+    ///
+    /// 2. **Make the Pivot of Row 1 (already 1)**:
+    ///
+    ///    The first leading entry is already 1.
+    ///
+    /// 3. **Eliminate Below Pivot in Column 1**:
+    ///
+    ///    Subtract 4 times the first row from the second row:
+    ///
+    ///    R2 = R2 - 4R1
+    ///    [
+    ///      [1, 2, 3],
+    ///      [0, -3, -6],
+    ///      [7, 8, 9]
+    ///    ]
+    ///
+    ///    Subtract 7 times the first row from the third row:
+    ///
+    ///    R3 = R3 - 7R1
+    ///    [
+    ///      [1, 2, 3],
+    ///      [0, -3, -6],
+    ///      [0, -6, -12]
+    ///    ]
+    ///
+    /// 4. **Make the Pivot of Row 2**:
+    ///
+    ///    Divide the second row by -3 to make the pivot 1:
+    ///
+    ///    R2 = (1 / -3) * R2
+    ///    [
+    ///      [1, 2, 3],
+    ///      [0, 1, 2],
+    ///      [0, -6, -12]
+    ///    ]
+    ///
+    /// 5. **Eliminate Below Pivot in Column 2**:
+    ///
+    ///    Add 6 times the second row to the third row:
+    ///
+    ///    R3 = R3 + 6R2
+    ///    [
+    ///      [1, 2, 3],
+    ///      [0, 1, 2],
+    ///      [0, 0, 0]
+    ///    ]
+    ///
+    /// Now, the matrix is in row-echelon form.
     ///
     /// # Examples
     ///
