@@ -22,7 +22,7 @@ It provides functionalities to perform various exercises related to vectors and 
 
 ## Usage
 
-The crate is currently on [version 0.1.1](https://crates.io/crates/mini_matrix).
+The crate is currently on [version 0.1.5](https://crates.io/crates/mini_matrix).
 
 The `main` function allows you to run different exercises based on a command-line argument specifying the exercise number.
 
@@ -50,6 +50,10 @@ Contributions are welcome! Please see the [contribution guidelines](CONTRIBUTING
 ## Implementation
 
 This project is implemented using [Rust](https://www.rust-lang.org/), a systems programming language known for its performance and safety features.
+
+## Documentation
+
+You can find the documentation for this project [docs](https://docs.rs/mini-matrix/0.1.4/mini_matrix/index.html).
 
 ---
 

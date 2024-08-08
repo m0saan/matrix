@@ -1,6 +1,6 @@
 [package]
 name = "mini-matrix"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["m0sani <moboustt@student.1337.ma>"]
 description = "A mini linear algebra library implemented in Rust."
