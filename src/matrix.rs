@@ -654,27 +654,27 @@ where
     /// 3. **Eliminate Below Pivot in Column 1**:
     ///
     ///    Subtract 4 times the first row from the second row:
-    ///
+    ///   ```markdown
     ///    R2 = R2 - 4R1
     ///    [
     ///      [1, 2, 3],
     ///      [0, -3, -6],
     ///      [7, 8, 9]
     ///    ]
-    ///
+    ///  ```
     ///    Subtract 7 times the first row from the third row:
-    ///
+    ///  ```markdown
     ///    R3 = R3 - 7R1
     ///    [
     ///      [1, 2, 3],
     ///      [0, -3, -6],
     ///      [0, -6, -12]
     ///    ]
-    ///
+    /// ```
     /// 4. **Make the Pivot of Row 2**:
     ///
     ///    Divide the second row by -3 to make the pivot 1:
-    ///
+    /// ```markdown
     ///    R2 = (1 / -3) * R2
     ///    [
     ///      [1, 2, 3],
@@ -685,14 +685,14 @@ where
     /// 5. **Eliminate Below Pivot in Column 2**:
     ///
     ///    Add 6 times the second row to the third row:
-    ///
+    /// ```markdown
     ///    R3 = R3 + 6R2
     ///    [
     ///      [1, 2, 3],
     ///      [0, 1, 2],
     ///      [0, 0, 0]
     ///    ]
-    ///
+    /// ```
     /// Now, the matrix is in row-echelon form.
     ///
     /// # Examples
@@ -708,63 +708,6 @@ where
     /// let b = a.row_echelon();
     /// // Check the result (approximate due to floating-point arithmetic)
     /// ```
-    // pub fn row_echelon(&self) -> Matrix<T, M, N> {
-    //     let mut result = self.clone();
-    //     let mut pivot = 0;
-
-    //     for r in 0..M {
-    //         if pivot >= N {
-    //             break;
-    //         }
-
-    //         // Find the row with a non-zero pivot
-    //         let mut i = r;
-    //         while i < M && result[(i, pivot)] == T::default() {
-    //             i += 1;
-    //         }
-
-    //         if i == M {
-    //             pivot += 1;
-    //             if pivot >= N {
-    //                 break;
-    //             }
-    //             // No non-zero element found in this column, continue to the next column
-    //             continue;
-    //         }
-
-    //         // Swap the current row with the row containing the non-zero pivot
-    //         if i != r {
-    //             for j in 0..N {
-    //                 let temp = result[(r, j)];
-    //                 result[(r, j)] = result[(i, j)];
-    //                 result[(i, j)] = temp;
-    //             }
-    //         }
-
-    //         // Normalize the pivot row
-    //         let divisor = result[(r, pivot)];
-    //         if divisor != T::default() {
-    //             for j in 0..N {
-    //                 result[(r, j)] = result[(r, j)] / divisor;
-    //             }
-    //         }
-
-    //         // Eliminate the pivot column in all other rows
-    //         for i in 0..M {
-    //             if i != r {
-    //                 let factor = result[(i, pivot)];
-    //                 for j in 0..N {
-    //                     result[(i, j)] = result[(i, j)] - factor * result[(r, j)];
-    //                 }
-    //             }
-    //         }
-
-    //         pivot += 1;
-    //     }
-
-    //     result
-    // }
-
     pub fn row_echelon(&self) -> Matrix<T, M, N> {
         let mut result = self.clone();
         // let mut matrix_out = result.store;
