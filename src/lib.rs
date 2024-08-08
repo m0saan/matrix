@@ -2,8 +2,8 @@
 
 mod matrix;
 mod operations;
-mod vector;
 mod utility;
+mod vector;
 
 pub use matrix::Matrix;
 pub use operations::*;

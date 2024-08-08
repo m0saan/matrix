@@ -4,7 +4,7 @@
 //!
 use num::{Float, Num};
 use std::iter::Sum;
-use std::ops::{Add, Mul, AddAssign};
+use std::ops::{Add, AddAssign, Mul};
 
 use super::Vector;
 
@@ -47,7 +47,7 @@ use super::Vector;
 // O(n)
 
 pub fn linear_combination<T, const N: usize>(
-    vectors: & [Vector<T, N>],
+    vectors: &[Vector<T, N>],
     scalars: &[T],
 ) -> Vector<T, N>
 where
@@ -114,7 +114,6 @@ where
 {
     u * (1.0 - t) + v * t
 }
-
 
 /* *********************** */
 /*      Cosine Angle       */

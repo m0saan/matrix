@@ -2,7 +2,6 @@ use crate::Matrix;
 use num::Num;
 use std::ops::{AddAssign, Mul, Neg};
 
-
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + PartialEq,
