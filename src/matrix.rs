@@ -708,60 +708,107 @@ where
     /// let b = a.row_echelon();
     /// // Check the result (approximate due to floating-point arithmetic)
     /// ```
+    // pub fn row_echelon(&self) -> Matrix<T, M, N> {
+    //     let mut result = self.clone();
+    //     let mut pivot = 0;
+
+    //     for r in 0..M {
+    //         if pivot >= N {
+    //             break;
+    //         }
+
+    //         // Find the row with a non-zero pivot
+    //         let mut i = r;
+    //         while i < M && result[(i, pivot)] == T::default() {
+    //             i += 1;
+    //         }
+
+    //         if i == M {
+    //             pivot += 1;
+    //             if pivot >= N {
+    //                 break;
+    //             }
+    //             // No non-zero element found in this column, continue to the next column
+    //             continue;
+    //         }
+
+    //         // Swap the current row with the row containing the non-zero pivot
+    //         if i != r {
+    //             for j in 0..N {
+    //                 let temp = result[(r, j)];
+    //                 result[(r, j)] = result[(i, j)];
+    //                 result[(i, j)] = temp;
+    //             }
+    //         }
+
+    //         // Normalize the pivot row
+    //         let divisor = result[(r, pivot)];
+    //         if divisor != T::default() {
+    //             for j in 0..N {
+    //                 result[(r, j)] = result[(r, j)] / divisor;
+    //             }
+    //         }
+
+    //         // Eliminate the pivot column in all other rows
+    //         for i in 0..M {
+    //             if i != r {
+    //                 let factor = result[(i, pivot)];
+    //                 for j in 0..N {
+    //                     result[(i, j)] = result[(i, j)] - factor * result[(r, j)];
+    //                 }
+    //             }
+    //         }
+
+    //         pivot += 1;
+    //     }
+
+    //     result
+    // }
+
     pub fn row_echelon(&self) -> Matrix<T, M, N> {
         let mut result = self.clone();
+        // let mut matrix_out = result.store;
         let mut pivot = 0;
+        let row_count = M;
+        let column_count = N;
 
-        for r in 0..M {
-            if pivot >= N {
+        'outer: for r in 0..row_count {
+            if column_count <= pivot {
                 break;
             }
-
-            // Find the row with a non-zero pivot
             let mut i = r;
-            while i < M && result[(i, pivot)] == T::default() {
-                i += 1;
-            }
-
-            if i == M {
-                pivot += 1;
-                if pivot >= N {
-                    break;
-                }
-                // No non-zero element found in this column, continue to the next column
-                continue;
-            }
-
-            // Swap the current row with the row containing the non-zero pivot
-            if i != r {
-                for j in 0..N {
-                    let temp = result[(r, j)];
-                    result[(r, j)] = result[(i, j)];
-                    result[(i, j)] = temp;
-                }
-            }
-
-            // Normalize the pivot row
-            let divisor = result[(r, pivot)];
-            if divisor != T::default() {
-                for j in 0..N {
-                    result[(r, j)] = result[(r, j)] / divisor;
-                }
-            }
-
-            // Eliminate the pivot column in all other rows
-            for i in 0..M {
-                if i != r {
-                    let factor = result[(i, pivot)];
-                    for j in 0..N {
-                        result[(i, j)] = result[(i, j)] - factor * result[(r, j)];
+            while result[(i, pivot)] == T::default() {
+                i = i + 1;
+                if i == row_count {
+                    i = r;
+                    pivot = pivot + 1;
+                    if column_count == pivot {
+                        pivot = pivot - 1;
+                        break 'outer;
                     }
                 }
             }
-
-            pivot += 1;
+            for j in 0..row_count {
+                let temp = result[(r, j)];
+                result[(r, j)] = result[(i, j)];
+                result[(i, j)] = temp;
+            }
+            let divisor = result[(r, pivot)];
+            if divisor != T::default() {
+                for j in 0..column_count {
+                    result[(r, j)] = result[(r, j)] / divisor;
+                }
+            }
+            for j in 0..row_count {
+                if j != r {
+                    let hold = result[(j, pivot)];
+                    for k in 0..column_count {
+                        result[(j, k)] = result[(j, k)] - (hold * result[(r, k)]);
+                    }
+                }
+            }
+            pivot = pivot + 1;
         }
-
         result
     }
 }
@@ -774,13 +821,59 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 where
     T: Copy + Default + Mul + Num + Neg<Output = T> + AddAssign + Debug,
 {
-    /// Calculates the determinant of the matrix.
+    /// Computes the determinant of the matrix.
     ///
-    /// This method supports matrices up to 4x4 in size.
+    /// # Determinant in General
+    ///
+    /// The determinant is a scalar value that can be computed from the elements of a square matrix.
+    /// It provides important properties about the matrix and the linear transformation it represents.
+    /// In general, the determinant represents the scaling factor of the volume when the matrix is
+    /// used as a linear transformation. It can be positive, negative, or zero, each with different
+    /// implications:
+    ///
+    /// - **\(\det(A) = 0\)**:
+    ///   - The matrix `A` is **singular** and does not have an inverse.
+    ///   - The columns (or rows) of `A` are linearly dependent.
+    ///   - The transformation collapses the space into a lower-dimensional subspace.
+    ///   - Geometrically, it indicates that the volume of the transformed space is 0.
+    ///
+    /// - **\(\det(A) > 0\)**:
+    ///   - The matrix `A` is **non-singular** and has an inverse.
+    ///   - The transformation preserves the orientation of the space.
+    ///   - Geometrically, it indicates a positive scaling factor of the volume.
+    ///
+    /// - **\(\det(A) < 0\)**:
+    ///   - The matrix `A` is **non-singular** and has an inverse.
+    ///   - The transformation reverses the orientation of the space.
+    ///   - Geometrically, it indicates a negative scaling factor of the volume.
+    ///
+    /// # Example
+    ///
+    /// Consider a `2 x 2` matrix:
+    ///
+    /// ```text
+    /// A = [
+    ///   [1, 2],
+    ///   [3, 4]
+    /// ]
+    /// ```
+    ///
+    /// The determinant is:
+    ///
+    /// ```text
+    /// det(A) = 1 * 4 - 2 * 3 = 4 - 6 = -2
+    /// ```
+    ///
+    /// This indicates that the transformation represented by `A` scales areas by a factor of 2 and
+    /// reverses their orientation.
     ///
     /// # Panics
     ///
-    /// Panics if the matrix is larger than 4x4.
+    /// Panics if the matrix size is larger than `4 x 4`.
+    ///
+    /// # Returns
+    ///
+    /// The determinant of the matrix.
     ///
     /// # Examples
     ///
