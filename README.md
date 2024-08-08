@@ -59,7 +59,7 @@ The library is most easily used with [cargo](http://doc.crates.io/guide.html). S
 
 ```toml
 [dependencies]
-mini_matrix = "0.1.1"
+num = "0.4.3"
 
 ```
 or use the following command:
