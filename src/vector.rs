@@ -416,6 +416,12 @@ where
     ///
     /// # Returns
     /// The L1 norm as a value of type `T`.
+    /// # Examples
+    /// ```
+    /// use mini_matrix::Vector;
+    /// let v = Vector::from([1.0, -2.0, 3.0]);
+    /// assert_eq!(v.norm_1(), 6.0);
+    /// ```
     pub fn norm_1(&self) -> T {
         self.store.iter().map(|x| x.abs()).sum()
     }
@@ -426,6 +432,12 @@ where
     ///
     /// # Returns
     /// The L2 norm as a value of type `T`.
+    /// # Examples
+    /// ```
+    /// use mini_matrix::Vector;
+    /// let v = Vector::from([1.0, -2.0, 3.0]);
+    /// assert_eq!(v.norm(), (1.0 + 4.0 + 9.0).sqrt());
+    /// ```
     pub fn norm(&self) -> T {
         self.store.iter().map(|x| x.powi(2)).sum::<T>().sqrt()
     }
@@ -436,6 +448,12 @@ where
     ///
     /// # Returns
     /// The L-infinity norm as a value of type `T`.
+    /// # Examples
+    /// ```
+    /// use mini_matrix::Vector;
+    /// let v = Vector::from([1.0, -2.0, 3.0]);
+    /// assert_eq!(v.norm_inf(), 3.0);
+    /// ```
     pub fn norm_inf(&self) -> T {
         self.store
             .iter()
