@@ -436,7 +436,7 @@ where
     /// ```
     /// use mini_matrix::Vector;
     /// let v = Vector::from([1.0, -2.0, 3.0]);
-    /// assert_eq!(v.norm(), (1.0 + 4.0 + 9.0).sqrt());
+    /// assert_eq!(v.norm(), [1.0 + 4.0 + 9.0].iter().sum::<f32>().sqrt());
     /// ```
     pub fn norm(&self) -> T {
         self.store.iter().map(|x| x.powi(2)).sum::<T>().sqrt()
