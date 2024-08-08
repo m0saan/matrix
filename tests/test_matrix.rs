@@ -325,23 +325,23 @@ mod matrix_tests {
         // [1.0, 2.0]
         // [0.0, 0.0]
 
-        // let u = Matrix::from([
-        //     [8., 5., -2., 4., 28.],
-        //     [4., 2.5, 20., 4., -4.],
-        //     [8., 5., 1., 4., 17.],
-        // ]);
-        // let result: f32 = u.row_echelon().store.as_flattened().iter().sum();
-        // let expected: f32 = Matrix::from([
-        //     [1.0, 0.625, 0.0, 0.0, -12.1666667],
-        //     [0.0, 0.0, 1.0, 0.0, -3.6666667],
-        //     [0.0, 0.0, 0.0, 1.0, 29.5],
-        // ] as [[f32; 5]; 3])
-        // .store
-        // .as_flattened()
-        // .iter()
-        // .sum();
-        // println!("-------------------> failing test {:?}", (result - expected).abs());
-        // assert!((result - expected).abs() < 0.000001);
+        let u = Matrix::from([
+            [8., 5., -2., 4., 28.],
+            [4., 2.5, 20., 4., -4.],
+            [8., 5., 1., 4., 17.],
+        ]);
+        let result: f32 = u.row_echelon().store.as_flattened().iter().sum();
+
+        let expected: f32 = Matrix::from([
+            [1.0, 0.625, 0.0, 0.0, -12.1666667],
+            [0.0, 0.0, 1.0, 0.0, -3.6666667],
+            [0.0, 0.0, 0.0, 1.0, 29.5],
+        ] as [[f32; 5]; 3])
+        .store
+        .as_flattened()
+        .iter()
+        .sum();
+        assert_eq!((result - expected).abs() < 0.0001, true);
         // [1.0, 0.625, 0.0, 0.0, -12.1666667]
         // [0.0, 0.0, 1.0, 0.0, -3.6666667]
         // [0.0, 0.0, 0.0, 1.0, 29.5 ]
@@ -349,23 +349,18 @@ mod matrix_tests {
 
     #[test]
     fn test_row_echelon_subject() {
-        // Test for a 2x2 zero matrix
         let mat1 = Matrix::from([[0, 0], [0, 0]]);
         assert_eq!(mat1.row_echelon().store, [[0, 0], [0, 0]]);
 
-        // Test for a 2x2 identity matrix
         let mat2 = Matrix::from([[1, 0], [0, 1]]);
         assert_eq!(mat2.row_echelon().store, [[1, 0], [0, 1]]);
 
-        // Test for a 2x2 matrix with different values
         let mat3 = Matrix::from([[4., 2.], [2., 1.]]);
         assert_eq!(mat3.row_echelon().store, [[1., 0.5], [0., 0.]]);
 
-        // Test for a 2x2 matrix with more complex values
         let mat4 = Matrix::from([[-7, 2], [4, 8]]);
         assert_eq!(mat4.row_echelon().store, [[1, 0], [0, 1]]);
 
-        // Test for a 2x2 matrix with another set of values
         let mat5 = Matrix::from([[1, 2], [4, 8]]);
         assert_eq!(mat5.row_echelon().store, [[1, 2], [0, 0]]);
     }
@@ -404,35 +399,27 @@ mod matrix_tests {
 
     #[test]
     fn test_determinant_subject() {
-        // Test for a 2x2 zero matrix
         let mat1 = Matrix::from([[0, 0], [0, 0]]);
         assert_eq!(mat1.determinant(), 0);
 
-        // Test for a 2x2 identity matrix
         let mat2 = Matrix::from([[1, 0], [0, 1]]);
         assert_eq!(mat2.determinant(), 1);
 
-        // Test for a 2x2 diagonal matrix
         let mat3 = Matrix::from([[2, 0], [0, 2]]);
         assert_eq!(mat3.determinant(), 4);
 
-        // Test for a 2x2 matrix with identical rows
         let mat4 = Matrix::from([[1, 1], [1, 1]]);
         assert_eq!(mat4.determinant(), 0);
 
-        // Test for a 2x2 matrix with specific values
         let mat5 = Matrix::from([[0, 1], [1, 0]]);
         assert_eq!(mat5.determinant(), -1);
 
-        // Test for a 3x3 matrix
         let mat6 = Matrix::from([[1, 2], [3, 4]]);
         assert_eq!(mat6.determinant(), -2);
 
-        // Test for a 2x2 matrix with negative values
         let mat7 = Matrix::from([[-7, 5], [4, 6]]);
         assert_eq!(mat7.determinant(), -62);
 
-        // Test for a 3x3 identity matrix
         let mat8 = Matrix::from([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
         assert_eq!(mat8.determinant(), 1);
     }
@@ -479,52 +466,52 @@ mod matrix_tests {
         assert_eq!(matrix.inverse().unwrap(), expected);
     }
 
-    // #[test]
-    // fn test_rank_zeros() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[0.0, 0.0], [0.0, 0.0]]);
-    //     assert_eq!(matrix.rank(), 0);
-    // }
+    #[test]
+    fn test_rank_zeros() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[0.0, 0.0], [0.0, 0.0]]);
+        assert_eq!(matrix.rank(), 0);
+    }
 
-    // #[test]
-    // fn test_rank_identity() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 0.0], [0.0, 1.0]]);
-    //     assert_eq!(matrix.rank(), 2);
-    // }
+    #[test]
+    fn test_rank_identity() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 0.0], [0.0, 1.0]]);
+        assert_eq!(matrix.rank(), 2);
+    }
 
-    // #[test]
-    // fn test_rank_scaled_identity() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[2.0, 0.0], [0.0, 2.0]]);
-    //     assert_eq!(matrix.rank(), 2);
-    // }
+    #[test]
+    fn test_rank_scaled_identity() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[2.0, 0.0], [0.0, 2.0]]);
+        assert_eq!(matrix.rank(), 2);
+    }
 
-    // #[test]
-    // fn test_rank_identical_rows() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 1.0], [1.0, 1.0]]);
-    //     assert_eq!(matrix.rank(), 1);
-    // }
+    #[test]
+    fn test_rank_identical_rows() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 1.0], [1.0, 1.0]]);
+        assert_eq!(matrix.rank(), 1);
+    }
 
-    // #[test]
-    // fn test_rank_permutation() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[0.0, 1.0], [1.0, 0.0]]);
-    //     assert_eq!(matrix.rank(), 2);
-    // }
+    #[test]
+    fn test_rank_permutation() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[0.0, 1.0], [1.0, 0.0]]);
+        assert_eq!(matrix.rank(), 2);
+    }
 
-    // #[test]
-    // fn test_rank_generic() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
-    //     assert_eq!(matrix.rank(), 2);
-    // }
+    #[test]
+    fn test_rank_generic() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
+        assert_eq!(matrix.rank(), 2);
+    }
 
-    // #[test]
-    // fn test_rank_custom() {
-    //     let matrix: Matrix<f64, 2, 2> = Matrix::from([[-7.0, 5.0], [4.0, 6.0]]);
-    //     assert_eq!(matrix.rank(), 2);
-    // }
+    #[test]
+    fn test_rank_custom() {
+        let matrix: Matrix<f64, 2, 2> = Matrix::from([[-7.0, 5.0], [4.0, 6.0]]);
+        assert_eq!(matrix.rank(), 2);
+    }
 
-    // #[test]
-    // fn test_rank_identity_3x3() {
-    //     let matrix: Matrix<f64, 3, 3> =
-    //         Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
-    //     assert_eq!(matrix.rank(), 3);
-    // }
+    #[test]
+    fn test_rank_identity_3x3() {
+        let matrix: Matrix<f64, 3, 3> =
+            Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
+        assert_eq!(matrix.rank(), 3);
+    }
 }

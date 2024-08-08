@@ -298,8 +298,10 @@ where
     }
 }
 
-
-impl<T, const N:usize> Mul<T> for Vector<T, N> where T: Mul + Num + Copy{
+impl<T, const N: usize> Mul<T> for Vector<T, N>
+where
+    T: Mul + Num + Copy,
+{
     type Output = Self;
     /// Multiplies a vector by a scalar.
     ///
